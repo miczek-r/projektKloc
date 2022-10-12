@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class CameraMovement : MonoBehaviour
 {
-   [Header("References")]
+    [Header("References")]
     public Transform orientation;
     public Transform player;
     public Transform playerObj;
@@ -14,16 +14,14 @@ public class CameraMovement : MonoBehaviour
 
     public Transform combatLookAt;
 
-    public GameObject thirdPersonCam;
-    public GameObject combatCam;
-    public GameObject topDownCam;
+    public GameObject mainCamera;
+    public GameObject aimingCamera;
 
     public CameraStyle currentStyle;
     public enum CameraStyle
     {
         Basic,
-        Combat,
-        Topdown
+        Aiming
     }
 
     private void Start()
@@ -34,17 +32,13 @@ public class CameraMovement : MonoBehaviour
 
     private void Update()
     {
-        // switch styles
-        if (Input.GetKeyDown(KeyCode.Alpha1)) SwitchCameraStyle(CameraStyle.Basic);
-        if (Input.GetKeyDown(KeyCode.Alpha2)) SwitchCameraStyle(CameraStyle.Combat);
-        if (Input.GetKeyDown(KeyCode.Alpha3)) SwitchCameraStyle(CameraStyle.Topdown);
+        if (Input.GetMouseButtonDown(1)) SwitchCameraStyle(CameraStyle.Aiming);
+        if (Input.GetMouseButtonUp(1)) SwitchCameraStyle(CameraStyle.Basic);
 
-        // rotate orientation
         Vector3 viewDir = player.position - new Vector3(transform.position.x, player.position.y, transform.position.z);
         orientation.forward = viewDir.normalized;
 
-        // roate player object
-        if(currentStyle == CameraStyle.Basic || currentStyle == CameraStyle.Topdown)
+        if (currentStyle == CameraStyle.Basic)
         {
             float horizontalInput = Input.GetAxis("Horizontal");
             float verticalInput = Input.GetAxis("Vertical");
@@ -54,7 +48,7 @@ public class CameraMovement : MonoBehaviour
                 playerObj.forward = Vector3.Slerp(playerObj.forward, inputDir.normalized, Time.deltaTime * rotationSpeed);
         }
 
-        else if(currentStyle == CameraStyle.Combat)
+        else if (currentStyle == CameraStyle.Aiming)
         {
             Vector3 dirToCombatLookAt = combatLookAt.position - new Vector3(transform.position.x, combatLookAt.position.y, transform.position.z);
             orientation.forward = dirToCombatLookAt.normalized;
@@ -65,13 +59,11 @@ public class CameraMovement : MonoBehaviour
 
     private void SwitchCameraStyle(CameraStyle newStyle)
     {
-        combatCam.SetActive(false);
-        thirdPersonCam.SetActive(false);
-        topDownCam.SetActive(false);
+        aimingCamera.SetActive(false);
+        mainCamera.SetActive(false);
 
-        if (newStyle == CameraStyle.Basic) thirdPersonCam.SetActive(true);
-        if (newStyle == CameraStyle.Combat) combatCam.SetActive(true);
-        if (newStyle == CameraStyle.Topdown) topDownCam.SetActive(true);
+        if (newStyle == CameraStyle.Basic) mainCamera.SetActive(true);
+        if (newStyle == CameraStyle.Aiming) aimingCamera.SetActive(true);
 
         currentStyle = newStyle;
     }

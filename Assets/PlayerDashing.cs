@@ -9,6 +9,7 @@ public class PlayerDashing : MonoBehaviour
     public Transform playerCam;
     private Rigidbody rb;
     private PlayerMovement pm;
+    private PlayerStats ps;
     [Header("Dashing")]
     public float dashForce;
     public float dashUpwardForce;
@@ -25,6 +26,7 @@ public class PlayerDashing : MonoBehaviour
     {
         rb = GetComponent<Rigidbody>();
         pm = GetComponent<PlayerMovement>();
+        ps = GetComponent<PlayerStats>();
     }
 
     private void Update()
@@ -42,10 +44,12 @@ public class PlayerDashing : MonoBehaviour
 
     private void Dash()
     {
-        if (dashCdTimer > 0) return;
+        if (dashCdTimer > 0 || ps.stamina < 50) return;
         else dashCdTimer = dashCd;
 
+        pm.moveLocked = true;
         pm.dashing = true;
+        ps.stamina -= 50;
 
         Invoke(nameof(ResetDash), dashDuration);
     }
@@ -58,6 +62,7 @@ public class PlayerDashing : MonoBehaviour
 
     private void ResetDash()
     {
+        pm.moveLocked = false;
         pm.dashing = false;
     }
 

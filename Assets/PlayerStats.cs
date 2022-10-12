@@ -20,7 +20,8 @@ public class PlayerStats : MonoBehaviour
         health = maxHealth;
         mana = maxMana;
         stamina = maxStamina;
-        InvokeRepeating(nameof(Dying), 2.0f, 0.3f);
+        InvokeRepeating(nameof(Dying), 2.0f, 2.3f);
+        InvokeRepeating(nameof(Regeneration), 2.0f, 1.0f);
     }
 
     // Update is called once per frame
@@ -36,6 +37,7 @@ public class PlayerStats : MonoBehaviour
         }
         if (health == 0)
         {
+            CancelInvoke();
             GetComponent<PlayerMovement>().enabled = false;
             cameraMovement.enabled = false;
             anim.SetBool("Death", true);
@@ -47,5 +49,24 @@ public class PlayerStats : MonoBehaviour
     {
 
         health -= 10;
+    }
+
+    void Regeneration()
+    {
+        health += 1;
+        if (health > maxHealth)
+        {
+            health = maxHealth;
+        }
+        stamina += 5;
+        if (stamina > maxStamina)
+        {
+            stamina = maxStamina;
+        }
+        mana += 1;
+        if (mana > maxMana)
+        {
+            mana = maxMana;
+        }
     }
 }

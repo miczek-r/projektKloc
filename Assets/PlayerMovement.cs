@@ -16,13 +16,18 @@ public class PlayerMovement : MonoBehaviour
     public float dashSpeed;
 
     public float groundDrag;
+    public bool moveLocked = false;
+    [Header("Gathering")]
+    public float gatheringCooldown;
+    public KeyCode gatheringKey = KeyCode.E;
 
     [Header("Jumping")]
     public float jumpForce;
     public float jumpCooldown;
     public float airMultiplier;
     bool readyToJump;
-
+    [Header("Attacking")]
+    public float attackCooldown;
     [Header("Ground Check")]
     public LayerMask whatIsGround;
     public float playerHeight;
@@ -43,6 +48,8 @@ public class PlayerMovement : MonoBehaviour
         walking,
         sprinting,
         air,
+        attacking,
+        gathering,
         dashing
     }
 
@@ -61,7 +68,6 @@ public class PlayerMovement : MonoBehaviour
     private void Update()
     {
         grounded = Physics.Raycast(transform.position, Vector3.down, 0.2f, whatIsGround);
-        Debug.DrawRay(transform.position, Vector3.down, Color.green);
 
         MyInput();
         SpeedControl();
@@ -78,10 +84,18 @@ public class PlayerMovement : MonoBehaviour
     {
     }
 
-    private Vector3 MyInput()
+    private void MyInput()
     {
+        if (moveLocked) return;
         horizontalInput = Input.GetAxis("Horizontal");
         verticalInput = Input.GetAxis("Vertical");
+
+        if (Input.GetKey(gatheringKey) && grounded)
+        {
+            Gathering();
+
+            Invoke(nameof(ResetGathering), gatheringCooldown);
+        }
 
         if (Input.GetKey(jumpKey) && readyToJump && grounded)
         {
@@ -92,9 +106,13 @@ public class PlayerMovement : MonoBehaviour
             Invoke(nameof(ResetJump), jumpCooldown);
         }
 
-        Vector3 inputDir = orientation.forward * verticalInput + orientation.right * horizontalInput;
+        if (Input.GetMouseButton(0) && grounded)
+        {
+            state = MovementState.attacking;
+            Attack();
+            Invoke(nameof(ResetAttack), attackCooldown);
+        }
 
-        return inputDir;
     }
 
     private void SetDashingSpeed()
@@ -109,33 +127,31 @@ public class PlayerMovement : MonoBehaviour
 
     private void StateHandler()
     {
-        Debug.Log(grounded);
+        if (moveLocked && (state == MovementState.attacking || state == MovementState.gathering)) return;
         if (dashing)
         {
             state = MovementState.dashing;
             anim.SetBool("Dashing", true);
-            Invoke(nameof(SetDashingSpeed), 0.25f);
+            SetDashingSpeed();
         }
         else if (grounded)
         {
-            if (state == MovementState.air)
-            {
-                anim.SetBool("Jumping", false);
-            }
             state = MovementState.walking;
-            Invoke(nameof(SetMovementSpeed), 0.25f);
+            SetMovementSpeed();
             anim.SetBool("Dashing", false);
+            anim.SetBool("Jumping", false);
         }
 
         // Mode - Air
         else
         {
+            anim.SetBool("Jumping", true);
             state = MovementState.air;
         }
     }
     private void FixedUpdate()
     {
-
+        if (state == MovementState.attacking || state == MovementState.gathering) return;
         moveDirection = orientation.forward * verticalInput + orientation.right * horizontalInput;
         rb.AddForce(moveDirection.normalized * moveSpeed * 10f, ForceMode.Force);
     }
@@ -151,6 +167,36 @@ public class PlayerMovement : MonoBehaviour
             Vector3 limitedVel = flatVel.normalized * moveSpeed;
             rb.velocity = new Vector3(limitedVel.x, rb.velocity.y, limitedVel.z);
         }
+    }
+
+    private void Gathering()
+    {
+        state = MovementState.gathering;
+        rb.velocity = Vector3.zero;
+        anim.SetBool("Gathering", true);
+        moveLocked = true;
+    }
+
+    private void ResetGathering()
+    {
+        state = MovementState.walking;
+        anim.SetBool("Gathering", false);
+        moveLocked = false;
+    }
+
+    private void Attack()
+    {
+        state = MovementState.attacking;
+        rb.velocity = Vector3.zero;
+        anim.SetBool("Attacking", true);
+        moveLocked = true;
+    }
+
+    private void ResetAttack()
+    {
+        state = MovementState.walking;
+        anim.SetBool("Attacking", false);
+        moveLocked = false;
     }
 
     private void Jump()
