@@ -82,6 +82,7 @@ public class PlayerMovement : MonoBehaviour
 
     private void GroundCheck()
     {
+
     }
 
     private void MyInput()
