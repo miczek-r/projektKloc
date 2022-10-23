@@ -16,7 +16,7 @@ public class DayAndNight : MonoBehaviour
     {
         lightIntensity = lightSource.intensity;
         shadowIntensity = lightSource.shadowStrength;
-
+        currentTime = 0.5f;
     }
     public void UpdateSun()
     {
