@@ -15,13 +15,11 @@ public class EntitDeadState : EntityBaseState
 
     public override void EnterState()
     {
-        Debug.Log("asd");
         Ctx.Animator.SetBool("isDead", true);
         Ctx.transform.Rotate(20.0f, 0.0f, 0.0f, Space.Self);
         Ctx.transform.Translate(0.0f, 0.3f, 0.0f, Space.Self);
         Ctx.GetComponent<Rigidbody>().useGravity = true;
         Ctx.GetComponent<CapsuleCollider>().radius = 0.01f;
-
     }
 
     public override void ExitState()
