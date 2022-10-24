@@ -116,6 +116,15 @@ public partial class @PlayerInput : IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""Debug"",
+                    ""type"": ""Button"",
+                    ""id"": ""55fdbb06-1baf-40ec-beb0-81deefae4d4a"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -272,6 +281,17 @@ public partial class @PlayerInput : IInputActionCollection2, IDisposable
                     ""action"": ""QuickSwap"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""f4232a5c-3deb-4bb5-8d57-e76756d29043"",
+                    ""path"": ""<Keyboard>/slash"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Debug"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         }
@@ -290,6 +310,7 @@ public partial class @PlayerInput : IInputActionCollection2, IDisposable
         m_Player_Quick1 = m_Player.FindAction("Quick1", throwIfNotFound: true);
         m_Player_Quick2 = m_Player.FindAction("Quick2", throwIfNotFound: true);
         m_Player_QuickSwap = m_Player.FindAction("QuickSwap", throwIfNotFound: true);
+        m_Player_Debug = m_Player.FindAction("Debug", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -359,6 +380,7 @@ public partial class @PlayerInput : IInputActionCollection2, IDisposable
     private readonly InputAction m_Player_Quick1;
     private readonly InputAction m_Player_Quick2;
     private readonly InputAction m_Player_QuickSwap;
+    private readonly InputAction m_Player_Debug;
     public struct PlayerActions
     {
         private @PlayerInput m_Wrapper;
@@ -373,6 +395,7 @@ public partial class @PlayerInput : IInputActionCollection2, IDisposable
         public InputAction @Quick1 => m_Wrapper.m_Player_Quick1;
         public InputAction @Quick2 => m_Wrapper.m_Player_Quick2;
         public InputAction @QuickSwap => m_Wrapper.m_Player_QuickSwap;
+        public InputAction @Debug => m_Wrapper.m_Player_Debug;
         public InputActionMap Get() { return m_Wrapper.m_Player; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -412,6 +435,9 @@ public partial class @PlayerInput : IInputActionCollection2, IDisposable
                 @QuickSwap.started -= m_Wrapper.m_PlayerActionsCallbackInterface.OnQuickSwap;
                 @QuickSwap.performed -= m_Wrapper.m_PlayerActionsCallbackInterface.OnQuickSwap;
                 @QuickSwap.canceled -= m_Wrapper.m_PlayerActionsCallbackInterface.OnQuickSwap;
+                @Debug.started -= m_Wrapper.m_PlayerActionsCallbackInterface.OnDebug;
+                @Debug.performed -= m_Wrapper.m_PlayerActionsCallbackInterface.OnDebug;
+                @Debug.canceled -= m_Wrapper.m_PlayerActionsCallbackInterface.OnDebug;
             }
             m_Wrapper.m_PlayerActionsCallbackInterface = instance;
             if (instance != null)
@@ -446,6 +472,9 @@ public partial class @PlayerInput : IInputActionCollection2, IDisposable
                 @QuickSwap.started += instance.OnQuickSwap;
                 @QuickSwap.performed += instance.OnQuickSwap;
                 @QuickSwap.canceled += instance.OnQuickSwap;
+                @Debug.started += instance.OnDebug;
+                @Debug.performed += instance.OnDebug;
+                @Debug.canceled += instance.OnDebug;
             }
         }
     }
@@ -462,5 +491,6 @@ public partial class @PlayerInput : IInputActionCollection2, IDisposable
         void OnQuick1(InputAction.CallbackContext context);
         void OnQuick2(InputAction.CallbackContext context);
         void OnQuickSwap(InputAction.CallbackContext context);
+        void OnDebug(InputAction.CallbackContext context);
     }
 }
