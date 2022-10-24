@@ -93,7 +93,7 @@ public class CameraController : MonoBehaviour
 
     void OnAim(InputAction.CallbackContext context)
     {
-        Debug.Log("Aiming");
+        if (!GetComponent<PlayerQuickActions>().hasBow) return;
         if (context.ReadValueAsButton())
         {
             standardCamera.SetActive(false);

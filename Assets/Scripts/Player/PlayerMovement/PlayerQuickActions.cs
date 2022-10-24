@@ -7,44 +7,92 @@ using UnityEngine.InputSystem;
 public class PlayerQuickActions : MonoBehaviour
 {
 
-    private Animator anim;
     public GameObject melee;
+    public GameObject offHand;
+    private Animator _anim;
+    private PlayerInput _playerInput;
+    public bool hasBow = false;
 
 
-    public void Start()
+    void Awake()
     {
-        anim = GetComponentInChildren<Animator>();
+        _anim = GetComponentInChildren<Animator>();
+        _playerInput = new PlayerInput();
+
+        _playerInput.Player.Quick1.started += OnQuick1;
+        _playerInput.Player.Quick2.started += OnQuick2;
+        _playerInput.Player.Quick3.started += OnQuick3;
+        _playerInput.Player.Quick4.started += OnQuick4;
+        _playerInput.Player.Quick5.started += OnQuick5;
+    }
+    public void OnQuick1(InputAction.CallbackContext context)
+    {
+        SetWeapon(0);
+    }
+    public void OnQuick2(InputAction.CallbackContext context)
+    {
+        SetWeapon(1);
+    }
+    public void OnQuick3(InputAction.CallbackContext context)
+    {
+        SetWeapon(2);
+    }
+    public void OnQuick4(InputAction.CallbackContext context)
+    {
+        SetWeapon(3);
+    }
+    public void OnQuick5(InputAction.CallbackContext context)
+    {
+        SetWeapon(4);
     }
 
-    public void OnQuickSwap(InputValue value)
+    private void SetWeapon(int weaponNumber)
     {
-        if (anim.GetInteger("WeaponType") == 0)
+        hasBow = false;
+        HideAllWeapons();
+        switch (weaponNumber)
         {
-            melee.transform.Find("Fist").gameObject.SetActive(false);
-            melee.transform.Find("Sword").gameObject.SetActive(true);
-            anim.SetInteger("WeaponType", 1);
+            case 0:
+                melee.transform.Find("Fist").gameObject.SetActive(true);
+                _anim.SetFloat("WeaponType", 0);
+                break;
+            case 1:
+                offHand.transform.Find("Shield").gameObject.SetActive(true);
+                melee.transform.Find("OneHanded").gameObject.SetActive(true);
+                _anim.SetFloat("WeaponType", 1);
+                break;
+            case 2:
+                melee.transform.Find("TwoHanded").gameObject.SetActive(true);
+                _anim.SetFloat("WeaponType", 2);
+                break;
+            case 3:
+                melee.transform.Find("Spear").gameObject.SetActive(true);
+                _anim.SetFloat("WeaponType", 3);
+                break;
+            case 4:
+                melee.transform.Find("Bow").gameObject.SetActive(true);
+                _anim.SetFloat("WeaponType", 4);
+                hasBow = true;
+                break;
         }
-        else
+    }
+
+    private void HideAllWeapons()
+    {
+        offHand.transform.Find("Shield").gameObject.SetActive(false);
+        foreach (Transform child in melee.transform)
         {
-            melee.transform.Find("Fist").gameObject.SetActive(true);
-            melee.transform.Find("Sword").gameObject.SetActive(false);
-            anim.SetInteger("WeaponType", 0);
+            child.gameObject.SetActive(false);
         }
     }
 
-    public void OnQuick1(InputValue value)
-    {
-        Debug.Log("Sword");
-        melee.transform.Find("Fist").gameObject.SetActive(false);
-        melee.transform.Find("Sword").gameObject.SetActive(true);
-        anim.SetInteger("WeaponType", 1);
-    }
-    public void OnQuick2(InputValue value)
-    {
-        Debug.Log("Fist");
-        melee.transform.Find("Fist").gameObject.SetActive(true);
-        melee.transform.Find("Sword").gameObject.SetActive(false);
-        anim.SetInteger("WeaponType", 0);
-    }
 
+    void OnEnable()
+    {
+        _playerInput.Player.Enable();
+    }
+    void OnDisable()
+    {
+        _playerInput.Player.Disable();
+    }
 }

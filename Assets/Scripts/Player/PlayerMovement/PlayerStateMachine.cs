@@ -34,6 +34,7 @@ public class PlayerStateMachine : MonoBehaviour
     public Transform orientation;
     [Header("Combat")]
     private bool _isAttacking = false;
+    private bool _isBlocking = false;
     public float _attackTime;
     private bool _isDamaged = false;
     private Queue<int> _damageTaken = new();
@@ -61,6 +62,7 @@ public class PlayerStateMachine : MonoBehaviour
     public int MovementSpeed { get { return _movementSpeed; } set { _movementSpeed = value; } }
     public float GroundDrag { get { return _groundDrag; } set { _groundDrag = value; } }
     public bool IsAttacking { get { return _isAttacking; } }
+    public bool IsBlocking { get { return _isBlocking; } }
     public bool IsDodging { get { return _isDodging; } }
     public bool MovementLock { set { _movementLock = value; } }
     public int IsFallingHash { get { return _isFallingHash; } }
@@ -88,6 +90,8 @@ public class PlayerStateMachine : MonoBehaviour
         _playerInput.Player.Dodge.canceled += OnDodge;
         _playerInput.Player.Debug.started += OnDebug;
         _playerInput.Player.Gather.started += OnGather;
+        _playerInput.Player.Aim.started += OnBlock;
+        _playerInput.Player.Aim.canceled += OnBlock;
     }
 
     void Start()
@@ -166,6 +170,12 @@ public class PlayerStateMachine : MonoBehaviour
     {
         _isDodging = context.ReadValueAsButton();
         //cameraController.enabled = !context.ReadValueAsButton();
+    }
+
+    void OnBlock(InputAction.CallbackContext context)
+    {
+        if (GetComponent<PlayerQuickActions>().hasBow) return;
+        _isBlocking = context.ReadValueAsButton();
     }
 
     void OnGather(InputAction.CallbackContext context)

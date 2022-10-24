@@ -39,6 +39,10 @@ public class PlayerGroudedState : PlayerBaseState
         {
             SwitchState(Factory.Gather());
         }
+        if (Ctx.IsBlocking)
+        {
+            SwitchState(Factory.Block());
+        }
     }
 
     public override void EnterState()

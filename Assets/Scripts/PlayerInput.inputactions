@@ -87,6 +87,42 @@
                     "initialStateCheck": false
                 },
                 {
+                    "name": "Quick3",
+                    "type": "Button",
+                    "id": "45d609e0-3c98-4b8a-b8b8-1572bd6947f7",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "Quick4",
+                    "type": "Button",
+                    "id": "1a959c1e-11f0-489b-aa28-d02754b6cd54",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "Quick5",
+                    "type": "Button",
+                    "id": "6767ffd8-3569-4496-a7c4-45cb10bd7370",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "Quick6",
+                    "type": "Button",
+                    "id": "c18ebbce-4dbc-48b7-b040-907b65f93dca",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
                     "name": "QuickSwap",
                     "type": "Button",
                     "id": "93f39077-abde-45f4-a21c-58d155324ca6",
@@ -251,12 +287,45 @@
                 },
                 {
                     "name": "",
-                    "id": "c6c26522-8101-40ae-9743-59b48498f739",
-                    "path": "<Keyboard>/q",
+                    "id": "1c3fe2af-720f-46b6-aa30-095ccc8dbc06",
+                    "path": "<Keyboard>/3",
                     "interactions": "",
                     "processors": "",
                     "groups": "",
-                    "action": "QuickSwap",
+                    "action": "Quick3",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "87344464-a56d-4953-bff8-d1b70e3a65d7",
+                    "path": "<Keyboard>/4",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Quick4",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "ab4ec100-e59a-42dc-a9be-7717e29f43e7",
+                    "path": "<Keyboard>/5",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Quick5",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "56f50590-dbcb-49eb-b49f-6cb0834ceafd",
+                    "path": "<Keyboard>/6",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Quick6",
                     "isComposite": false,
                     "isPartOfComposite": false
                 },
@@ -268,6 +337,17 @@
                     "processors": "",
                     "groups": "",
                     "action": "Debug",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "c6c26522-8101-40ae-9743-59b48498f739",
+                    "path": "<Keyboard>/q",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "QuickSwap",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }
