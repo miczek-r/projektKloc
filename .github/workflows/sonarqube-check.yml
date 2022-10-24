@@ -1,5 +1,8 @@
 name: sonarqube-check
 on:
+  pull_request:
+    branches:
+      - PreRelease
   push:
     branches:
       - PreRelease
