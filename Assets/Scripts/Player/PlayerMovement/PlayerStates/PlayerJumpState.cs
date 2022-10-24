@@ -15,6 +15,10 @@ public class PlayerJumpState : PlayerBaseState
         {
             SwitchState(Factory.Grounded());
         }
+        if (Ctx.Animator.GetCurrentAnimatorStateInfo(0).IsName("isJumping"))
+        {
+            SwitchState(Factory.Fall());
+        }
     }
 
     public override void EnterState()

@@ -9,7 +9,12 @@ enum PlayerStates
     groudned,
     jump,
     attack,
-    dodge
+    dodge,
+    fall,
+    damaged,
+    dead,
+    gather,
+    block
 }
 
 public class PlayerStateFactory : MonoBehaviour
@@ -27,6 +32,11 @@ public class PlayerStateFactory : MonoBehaviour
         _states[PlayerStates.jump] = new PlayerJumpState(_context, this);
         _states[PlayerStates.attack] = new PlayerAttackState(_context, this);
         _states[PlayerStates.dodge] = new PlayerDodgeState(_context, this);
+        _states[PlayerStates.fall] = new PlayerFallState(_context, this);
+        _states[PlayerStates.damaged] = new PlayerDamagedState(_context, this);
+        _states[PlayerStates.dead] = new PlayerDeadState(_context, this);
+        _states[PlayerStates.gather] = new PlayerGatherState(_context, this);
+        _states[PlayerStates.block] = new PlayerBlockState(_context, this);
     }
 
     public PlayerBaseState Idle() => _states[PlayerStates.idle];
@@ -35,5 +45,10 @@ public class PlayerStateFactory : MonoBehaviour
     public PlayerBaseState Jump() => _states[PlayerStates.jump];
     public PlayerBaseState Attack() => _states[PlayerStates.attack];
     public PlayerBaseState Dodge() => _states[PlayerStates.dodge];
+    public PlayerBaseState Fall() => _states[PlayerStates.fall];
+    public PlayerBaseState Damaged() => _states[PlayerStates.damaged];
+    public PlayerBaseState Dead() => _states[PlayerStates.dead];
+    public PlayerBaseState Gather() => _states[PlayerStates.gather];
+    public PlayerBaseState Block() => _states[PlayerStates.block];
 
 }

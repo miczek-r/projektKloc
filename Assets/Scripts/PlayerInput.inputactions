@@ -87,9 +87,54 @@
                     "initialStateCheck": false
                 },
                 {
+                    "name": "Quick3",
+                    "type": "Button",
+                    "id": "45d609e0-3c98-4b8a-b8b8-1572bd6947f7",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "Quick4",
+                    "type": "Button",
+                    "id": "1a959c1e-11f0-489b-aa28-d02754b6cd54",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "Quick5",
+                    "type": "Button",
+                    "id": "6767ffd8-3569-4496-a7c4-45cb10bd7370",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "Quick6",
+                    "type": "Button",
+                    "id": "c18ebbce-4dbc-48b7-b040-907b65f93dca",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
                     "name": "QuickSwap",
                     "type": "Button",
                     "id": "93f39077-abde-45f4-a21c-58d155324ca6",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "Debug",
+                    "type": "Button",
+                    "id": "55fdbb06-1baf-40ec-beb0-81deefae4d4a",
                     "expectedControlType": "Button",
                     "processors": "",
                     "interactions": "",
@@ -237,6 +282,61 @@
                     "processors": "",
                     "groups": "",
                     "action": "Quick2",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "1c3fe2af-720f-46b6-aa30-095ccc8dbc06",
+                    "path": "<Keyboard>/3",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Quick3",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "87344464-a56d-4953-bff8-d1b70e3a65d7",
+                    "path": "<Keyboard>/4",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Quick4",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "ab4ec100-e59a-42dc-a9be-7717e29f43e7",
+                    "path": "<Keyboard>/5",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Quick5",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "56f50590-dbcb-49eb-b49f-6cb0834ceafd",
+                    "path": "<Keyboard>/6",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Quick6",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "f4232a5c-3deb-4bb5-8d57-e76756d29043",
+                    "path": "<Keyboard>/slash",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Debug",
                     "isComposite": false,
                     "isPartOfComposite": false
                 },
