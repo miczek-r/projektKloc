@@ -6,7 +6,7 @@ on:
   push:
     branches:
       - PreRelease
-    workflow_dispatch:
+  workflow_dispatch: {}
 jobs:
   sonarqube-check:
     runs-on: ubuntu-latest
