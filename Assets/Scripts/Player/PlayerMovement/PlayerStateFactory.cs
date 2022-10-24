@@ -13,7 +13,8 @@ enum PlayerStates
     fall,
     damaged,
     dead,
-    gather
+    gather,
+    block
 }
 
 public class PlayerStateFactory : MonoBehaviour
@@ -35,6 +36,7 @@ public class PlayerStateFactory : MonoBehaviour
         _states[PlayerStates.damaged] = new PlayerDamagedState(_context, this);
         _states[PlayerStates.dead] = new PlayerDeadState(_context, this);
         _states[PlayerStates.gather] = new PlayerGatherState(_context, this);
+        _states[PlayerStates.block] = new PlayerBlockState(_context, this);
     }
 
     public PlayerBaseState Idle() => _states[PlayerStates.idle];
@@ -47,5 +49,6 @@ public class PlayerStateFactory : MonoBehaviour
     public PlayerBaseState Damaged() => _states[PlayerStates.damaged];
     public PlayerBaseState Dead() => _states[PlayerStates.dead];
     public PlayerBaseState Gather() => _states[PlayerStates.gather];
+    public PlayerBaseState Block() => _states[PlayerStates.block];
 
 }
