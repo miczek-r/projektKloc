@@ -2,7 +2,7 @@ name: sonarqube-check
 on:
   push:
     branches:
-      - develop
+      - PreRelease
     workflow_dispatch:
 jobs:
   sonarqube-check:
