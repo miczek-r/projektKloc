@@ -10,15 +10,16 @@ public class PlayerStateMachine : MonoBehaviour
     private Rigidbody _rigidbody;
     private PlayerInput _playerInput;
     private Animator _animator;
+    private PlayerStats _playerStats;
     public GameObject melee;
 
     [Header("Ground Check")]
     public LayerMask whatIsGround;
-    public float playerHeight;
     private bool _isGrounded;
 
     [Header("Jumping")]
     private int _isJumpingHash;
+    private int _isFallingHash;
     public float _jumpForce;
     private bool _isJumpPressed;
     private bool _requireNewJumpPress = false;
@@ -33,17 +34,22 @@ public class PlayerStateMachine : MonoBehaviour
     public Transform orientation;
     [Header("Combat")]
     private bool _isAttacking = false;
+    private bool _isBlocking = false;
     public float _attackTime;
+    private bool _isDamaged = false;
+    private Queue<int> _damageTaken = new();
     [Header("Dodging")]
     private bool _isDodging = false;
     public float _dodgeTime;
+    [Header("Gather")]
+    private bool _isGathering = false;
 
 
     public CameraController cameraController;
     public PlayerBaseState CurrentState { get { return _currentState; } set { _currentState = value; } }
     public Rigidbody Rigidbody { get { return _rigidbody; } }
-    public Transform Transform { get { return transform; } }
     public Animator Animator { get { return _animator; } }
+    public PlayerStats PlayerStats { get { return _playerStats; } }
     public Vector3 CurrentMovement { get { return _currentMovement; } set { _currentMovement = value; } }
     public GameObject Melee { get { return melee; } }
     public bool IsGrounded { get { return _isGrounded; } }
@@ -56,8 +62,13 @@ public class PlayerStateMachine : MonoBehaviour
     public int MovementSpeed { get { return _movementSpeed; } set { _movementSpeed = value; } }
     public float GroundDrag { get { return _groundDrag; } set { _groundDrag = value; } }
     public bool IsAttacking { get { return _isAttacking; } }
+    public bool IsBlocking { get { return _isBlocking; } }
     public bool IsDodging { get { return _isDodging; } }
     public bool MovementLock { set { _movementLock = value; } }
+    public int IsFallingHash { get { return _isFallingHash; } }
+    public Queue<int> DamageTaken { get { return _damageTaken; } }
+    public bool IsDamaged { get { return _isDamaged; } set { _isDamaged = value; } }
+    public bool IsGathering { get { return _isGathering; } set { _isGathering = value; } }
 
     void Awake()
     {
@@ -66,6 +77,7 @@ public class PlayerStateMachine : MonoBehaviour
         cameraController = GetComponent<CameraController>();
         _isJumpingHash = Animator.StringToHash("isJumping");
         _isMovingHash = Animator.StringToHash("isMoving");
+        _isFallingHash = Animator.StringToHash("isFalling");
 
         _playerInput.Player.Jump.started += OnJump;
         _playerInput.Player.Jump.canceled += OnJump;
@@ -76,11 +88,16 @@ public class PlayerStateMachine : MonoBehaviour
         _playerInput.Player.Attack.canceled += OnAttack;
         _playerInput.Player.Dodge.started += OnDodge;
         _playerInput.Player.Dodge.canceled += OnDodge;
+        _playerInput.Player.Debug.started += OnDebug;
+        _playerInput.Player.Gather.started += OnGather;
+        _playerInput.Player.Aim.started += OnBlock;
+        _playerInput.Player.Aim.canceled += OnBlock;
     }
 
     void Start()
     {
         _rigidbody = GetComponent<Rigidbody>();
+        _playerStats = GetComponent<PlayerStats>();
         _states = new PlayerStateFactory(this);
         _currentState = _states.Grounded();
         _currentState.EnterState();
@@ -90,6 +107,43 @@ public class PlayerStateMachine : MonoBehaviour
     {
         _isGrounded = Physics.Raycast(transform.position, Vector3.down, 0.2f, whatIsGround);
         _currentState.UpdateStates();
+    }
+
+    Queue<int> _attackedBy = new();
+
+    private void OnTriggerEnter(Collider other)
+    {
+        if (other.transform.root.CompareTag("Player") && !_attackedBy.Contains(other.transform.root.GetInstanceID()))
+        {
+            _damageTaken.Enqueue(other.transform.root.GetComponent<EntityStats>().damage.GetValue());
+            _attackedBy.Enqueue(other.transform.root.GetInstanceID());
+            _isDamaged = true;
+            StartCoroutine(nameof(DamagedCd));
+        }
+
+    }
+
+    //TODO: Remove later
+    private void OnDebug(InputAction.CallbackContext context)
+    {
+        _damageTaken.Enqueue(10);
+        _attackedBy.Enqueue(transform.root.GetInstanceID());
+        _isDamaged = true;
+        StartCoroutine(nameof(DamagedCd));
+    }
+
+    private IEnumerator DamagedCd()
+    {
+        yield return new WaitForSeconds(0.5f);
+        _attackedBy.Dequeue();
+    }
+
+    public GameObject HitParticle;
+
+    public void SpawnBlood()
+    {
+        Instantiate(HitParticle, new Vector3(transform.position.x, transform.position.y + 1, transform.position.z), transform.rotation);
+
     }
 
     void OnJump(InputAction.CallbackContext context)
@@ -106,7 +160,6 @@ public class PlayerStateMachine : MonoBehaviour
         _isMoving = (!_movementLock) ? _currentMovementInput.x != 0 || _currentMovementInput.y != 0 : false;
     }
 
-    private bool _isInvoking = false;
     void OnAttack(InputAction.CallbackContext context)
     {
         _isMoving = false;
@@ -119,9 +172,16 @@ public class PlayerStateMachine : MonoBehaviour
         //cameraController.enabled = !context.ReadValueAsButton();
     }
 
+    void OnBlock(InputAction.CallbackContext context)
+    {
+        if (GetComponent<PlayerQuickActions>().hasBow) return;
+        _isBlocking = context.ReadValueAsButton();
+    }
+
     void OnGather(InputAction.CallbackContext context)
     {
-
+        _isMoving = false;
+        _isGathering = true;
     }
 
     void OnEnable()

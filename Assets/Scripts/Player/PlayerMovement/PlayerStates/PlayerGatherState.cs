@@ -6,26 +6,36 @@ public class PlayerGatherState : PlayerBaseState
 {
     public PlayerGatherState(PlayerStateMachine context, PlayerStateFactory playerStateFactory) : base(context, playerStateFactory)
     {
+        IsRootState = true;
     }
+
+    float timeToEnd;
 
     public override void CheckSwitchStates()
     {
-        throw new System.NotImplementedException();
+        timeToEnd -= Time.deltaTime;
+        if (timeToEnd < 0)
+        {
+            SwitchState(Factory.Grounded());
+        }
     }
 
     public override void EnterState()
     {
-        throw new System.NotImplementedException();
+        timeToEnd = 2.0f;
+        Ctx.MovementLock = true;
+        Ctx.Animator.SetTrigger("isGathering");
     }
 
     public override void ExitState()
     {
-        throw new System.NotImplementedException();
+        Ctx.MovementLock = false;
+        Ctx.IsGathering = false;
     }
 
     public override void InitializeSubState()
     {
-        throw new System.NotImplementedException();
+        SetSubState(Factory.Idle());
     }
 
     public override void UpdateState()

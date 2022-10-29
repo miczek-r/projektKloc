@@ -23,6 +23,26 @@ public class PlayerGroudedState : PlayerBaseState
         {
             SwitchState(Factory.Dodge());
         }
+        if (!Ctx.IsGrounded)
+        {
+            SwitchState(Factory.Fall());
+        }
+        if (Ctx.PlayerStats.IsDead)
+        {
+            SwitchState(Factory.Dead());
+        }
+        if (Ctx.IsDamaged)
+        {
+            SwitchState(Factory.Damaged());
+        }
+        if (Ctx.IsGathering)
+        {
+            SwitchState(Factory.Gather());
+        }
+        if (Ctx.IsBlocking)
+        {
+            SwitchState(Factory.Block());
+        }
     }
 
     public override void EnterState()
