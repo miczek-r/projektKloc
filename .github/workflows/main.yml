@@ -1,10 +1,10 @@
 name: Build project
 
 on:
-  push:
   pull_request:
-    branches:
-      - master
+    branches: 
+      - Release
+    types: [closed]
 
 jobs:
   buildForAllSupportedPlatforms:
