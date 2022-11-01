@@ -18,7 +18,6 @@ public class PlayerIdleState : PlayerBaseState
 
     public override void EnterState()
     {
-        Ctx.Rigidbody.drag = 5.0f;
         Ctx.Animator.SetBool(Ctx.IsMovingHash, false);
     }
 
