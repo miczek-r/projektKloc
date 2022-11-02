@@ -40,8 +40,16 @@ public class PlayerFallState : PlayerBaseState
         }
     }
 
+        private float _terminalVelocity = 53.0f;
+        public float Gravity = -15.0f;
+
     public override void UpdateState()
     {
+        if (Ctx.VerticalVelocity < _terminalVelocity)
+            {
+                Ctx.VerticalVelocity += Gravity * Time.deltaTime;
+            }
+            Debug.Log("Falling");
         CheckSwitchStates();
     }
 }
