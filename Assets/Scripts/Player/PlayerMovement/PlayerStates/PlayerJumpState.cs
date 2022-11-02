@@ -4,7 +4,8 @@ using UnityEngine;
 
 public class PlayerJumpState : PlayerBaseState
 {
-    public PlayerJumpState(PlayerStateMachine context, PlayerStateFactory playerStateFactory) : base(context, playerStateFactory)
+    public PlayerJumpState(PlayerStateMachine context, PlayerStateFactory playerStateFactory)
+        : base(context, playerStateFactory)
     {
         IsRootState = true;
     }
@@ -34,21 +35,19 @@ public class PlayerJumpState : PlayerBaseState
         Ctx.Animator.SetBool(Ctx.IsJumpingHash, false);
     }
 
-    public override void InitializeSubState()
-    {
-    }
+    public override void InitializeSubState() { }
 
     public override void UpdateState()
     {
         CheckSwitchStates();
     }
 
+    public float Gravity = -15.0f;
+    public float JumpHeight = 2.0f;
 
-        public float Gravity = -15.0f;
-        public float JumpHeight = 10.0f;
     private void Jump()
     {
-    Ctx.VerticalVelocity = Mathf.Sqrt(JumpHeight * -2f * Gravity);
+        Ctx.VerticalVelocity = Mathf.Sqrt(JumpHeight * -2f * Gravity);
 
         Ctx.Animator.SetBool(Ctx.IsJumpingHash, true);
     }
