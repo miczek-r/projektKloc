@@ -1,30 +1,50 @@
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 public class TreeSpawm : MonoBehaviour
 {
-   
 
-    public int forestSize = 25; // Overall size of the forest (a square of forestSize X forestSize).
-    public int elementSpacing = 3; // The spacing between element placements. Basically grid size.
 
-    public Element[] elements;
 
-    private void Start() {
+    public static int elementSpacing = 5; // The spacing between element placements. Basically grid size.
 
+    public static Element[] elements;
+    public Element[] objects;
+
+
+    private void Awake()
+    {
+        elements = objects;
+    }
+
+
+    public static List<GameObject> GenerateObjects(Vector2 coords, float forestSize, GameObject parent)
+    {
+
+        List<GameObject> ReturnedObjects = new List<GameObject>();
+        // forestSize *= 2.5;
+        forestSize *= 4 / 3;
+
+        Vector2 ChunkEnd = new Vector2(coords.x + forestSize, coords.y + forestSize);
+        Vector2 ChunkStart = new Vector2(coords.x - forestSize, coords.y - forestSize);
+        //coords.x-=forestSize;
+        //coords.y-= forestSize;
         // Loop through all the positions within our forest boundary.
-        for (int x = 0; x < forestSize; x += elementSpacing) {
-            for (int z = 0; z < forestSize; z += elementSpacing) {
+        for (float x = ChunkStart.x; x < ChunkEnd.x; x += elementSpacing)
+        {
+            for (float z = ChunkStart.y; z < ChunkEnd.y; z += elementSpacing)
+            {
 
                 // For each position, loop through each element...
-                for (int i = 0; i < elements.Length; i++) {
+                for (int i = 0; i < elements.Length; i++)
+                {
 
                     // Get the current element.
                     Element element = elements[i];
 
                     // Check if the element can be placed.
-                    if (element.CanPlace()) {
+                    if (element.CanPlace())
+                    {
 
                         // Add random elements to element placement.
                         Vector3 position = new Vector3(x, 0f, z);
@@ -32,13 +52,14 @@ public class TreeSpawm : MonoBehaviour
                         Vector3 rotation = new Vector3(Random.Range(0, 5f), Random.Range(0, 360f), Random.Range(0, 5f));
                         Vector3 scale = Vector3.one * Random.Range(0.75f, 1.25f);
 
+
                         // Instantiate and place element in world.
                         GameObject newElement = Instantiate(element.GetRandom());
-                        newElement.transform.SetParent(transform);
+                        newElement.transform.parent = parent.transform;
                         newElement.transform.position = position + offset;
                         newElement.transform.eulerAngles = rotation;
                         newElement.transform.localScale = scale;
-
+                        ReturnedObjects.Add(newElement);
                         // Break out of this for loop to ensure we don't place another element at this position.
                         break;
 
@@ -47,13 +68,16 @@ public class TreeSpawm : MonoBehaviour
                 }
             }
         }
+        return ReturnedObjects;
+
 
     }
 
 }
 
 [System.Serializable]
-public class Element {
+public class Element
+{
 
     public string name;
     [Range(1, 10)]
@@ -61,7 +85,8 @@ public class Element {
 
     public GameObject[] prefabs;
 
-    public bool CanPlace () {
+    public bool CanPlace()
+    {
 
         // Validation check to see if element can be placed. More detailed calculations can go here, such as checking perlin noise.
 
@@ -72,7 +97,8 @@ public class Element {
 
     }
 
-    public GameObject GetRandom() {
+    public GameObject GetRandom()
+    {
 
         // Return a random GameObject prefab from the prefabs array.
 
