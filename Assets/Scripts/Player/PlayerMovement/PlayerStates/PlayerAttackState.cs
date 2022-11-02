@@ -25,17 +25,21 @@ public class PlayerAttackState : PlayerBaseState
 
     public override void EnterState()
     {
+        Debug.Log("Started Attack");
         timeToEnd = Ctx._attackTime;
         Ctx.Melee.GetComponentInChildren<Collider>().enabled = true;
-        InitializeSubState();
         Ctx.MovementLock = true;
         Ctx.Animator.SetBool("isAttacking", true);
+        if(!Ctx.GetComponent<PlayerQuickActions>().hasBow)return;
+        Ctx.SpawnArrow();
     }
 
     public override void ExitState()
     {
+        Debug.Log("Ended Attack");
         Ctx.Melee.GetComponentInChildren<Collider>().enabled = false;
         Ctx.MovementLock = false;
+        Ctx.IsAttacking = false;
         Ctx.Animator.SetBool("isAttacking", false);
     }
 

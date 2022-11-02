@@ -4,8 +4,10 @@ using UnityEngine;
 
 public class PlayerDamagedState : PlayerBaseState
 {
-    public PlayerDamagedState(PlayerStateMachine context, PlayerStateFactory playerStateFactory) : base(context, playerStateFactory)
+    public PlayerDamagedState(PlayerStateMachine context, PlayerStateFactory playerStateFactory)
+        : base(context, playerStateFactory)
     {
+        IsRootState = true;
     }
 
     public override void CheckSwitchStates()
@@ -25,13 +27,9 @@ public class PlayerDamagedState : PlayerBaseState
             Ctx.PlayerStats.TakeDamage(Ctx.DamageTaken.Dequeue());
     }
 
-    public override void ExitState()
-    {
-    }
+    public override void ExitState() { }
 
-    public override void InitializeSubState()
-    {
-    }
+    public override void InitializeSubState() { }
 
     public override void UpdateState()
     {
