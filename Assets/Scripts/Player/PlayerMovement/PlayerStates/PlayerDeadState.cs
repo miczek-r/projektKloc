@@ -16,7 +16,7 @@ public class PlayerDeadState : PlayerBaseState
     public override void EnterState()
     {
         Ctx.Animator.SetBool("isDead", true);
-        Ctx.cameraController.enabled = false;
+        //Ctx.cameraController.enabled = false;
         Ctx.enabled = false;
     }
 

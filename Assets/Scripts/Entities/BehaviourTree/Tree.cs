@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 namespace BehaviourTree{
+    [RequireComponent(typeof(EntityStats))]
     public abstract class Tree : MonoBehaviour
 {
     private Node _root = null;
