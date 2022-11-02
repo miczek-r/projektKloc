@@ -674,7 +674,7 @@ Light:
   m_Type: 1
   m_Shape: 0
   m_Color: {r: 0.38968495, g: 0.42048016, b: 0.5943396, a: 1}
-  m_Intensity: 0.5
+  m_Intensity: 0.7
   m_Range: 10
   m_SpotAngle: 30
   m_InnerSpotAngle: 21.80208
@@ -911,7 +911,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   lightSource: {fileID: 705507994}
-  lengthOfCycle: 50
+  lengthOfCycle: 3600
   currentTime: 0
 --- !u!1 &740003293
 GameObject:
@@ -2037,7 +2037,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 49ce1792a710a7c4ba022d5c6ce9a4e3, type: 2}
+  - {fileID: 2100000, guid: d499979308abe504ba7f3751334d0c44, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -2075,7 +2075,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2110666070}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -0.25, y: 9.4, z: -4.09}
+  m_LocalPosition: {x: -0.25, y: 9, z: -4.09}
   m_LocalScale: {x: 20.249798, y: 1.9480283, z: 24.268717}
   m_ConstrainProportionsScale: 0
   m_Children: []
