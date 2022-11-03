@@ -1495,6 +1495,26 @@ MonoBehaviour:
       m_Calls: []
     m_ActionId: 93f39077-abde-45f4-a21c-58d155324ca6
     m_ActionName: Player/QuickSwap[/Keyboard/q]
+  - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: 45d609e0-3c98-4b8a-b8b8-1572bd6947f7
+    m_ActionName: Player/Quick3[/Keyboard/3]
+  - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: 1a959c1e-11f0-489b-aa28-d02754b6cd54
+    m_ActionName: Player/Quick4[/Keyboard/4]
+  - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: 6767ffd8-3569-4496-a7c4-45cb10bd7370
+    m_ActionName: Player/Quick5[/Keyboard/5]
+  - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: c18ebbce-4dbc-48b7-b040-907b65f93dca
+    m_ActionName: Player/Quick6[/Keyboard/6]
+  - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: 55fdbb06-1baf-40ec-beb0-81deefae4d4a
+    m_ActionName: Player/Debug[/Keyboard/slash]
   m_NeverAutoSwitchControlSchemes: 0
   m_DefaultControlScheme: 
   m_DefaultActionMap: Player
@@ -1531,6 +1551,8 @@ MonoBehaviour:
   whatIsGround:
     serializedVersion: 2
     m_Bits: 1024
+  GroundedOffset: -0.14
+  GroundedRadius: 0.25
   _jumpForce: 4
   _movementLock: 0
   _groundDrag: 2
@@ -1538,8 +1560,9 @@ MonoBehaviour:
   orientation: {fileID: 3162519473435711912}
   _attackTime: 1
   _dodgeTime: 1
-  cameraController: {fileID: 175711377389828196}
+  mainCamera: {fileID: 0}
   HitParticle: {fileID: 1968586304485042, guid: 6c86c599d7bf3464eb4506d2584fbe57, type: 3}
+  ArrowObject: {fileID: 0}
 --- !u!114 &175711377389828196
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1561,6 +1584,7 @@ MonoBehaviour:
   standardCamera: {fileID: 0}
   aimCamera: {fileID: 0}
   aimReticle: {fileID: 0}
+  rig: {fileID: 0}
   currentStyle: 0
 --- !u!1 &2742360797947639381
 GameObject:

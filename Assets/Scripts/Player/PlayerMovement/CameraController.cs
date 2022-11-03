@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
 using UnityEngine.InputSystem;
+using UnityEngine.Animations.Rigging;
 
 public class CameraController : MonoBehaviour
 {
@@ -19,6 +20,7 @@ public class CameraController : MonoBehaviour
     public GameObject standardCamera;
     public GameObject aimCamera;
     public GameObject aimReticle;
+    public Rig rig;
 
     public CameraStyle currentStyle;
 
@@ -48,6 +50,7 @@ public class CameraController : MonoBehaviour
 
     private void Update()
     {
+        CreateARay();
 
         Vector3 viewDir = transform.position - new Vector3(mainCamera.position.x, transform.position.y, mainCamera.position.z);
         orientation.forward = viewDir.normalized;
@@ -68,11 +71,30 @@ public class CameraController : MonoBehaviour
         }
     }
 
+    public LayerMask aimColiderMask = new LayerMask();
+    public Transform debugTransform;
+    public Vector3 mouseWorldPosition = Vector3.zero;
+    private void CreateARay(){
+        Vector2 screenCenterPoint = new Vector2(Screen.width / 2f, Screen.height / 2f);
+        Ray ray = Camera.main.ScreenPointToRay(screenCenterPoint);
+        if(Physics.Raycast(ray, out RaycastHit raycastHit, 999f, aimColiderMask)){
+            debugTransform.position = raycastHit.point;
+            mouseWorldPosition = raycastHit.point;
+        }
+
+    }
+
     IEnumerator ShowReticle()
     {
         yield return new WaitForSeconds(0.25f);
-        aimReticle.SetActive(enabled);
+        aimReticle.SetActive(true);
     }
+    IEnumerator HideReticle()
+    {
+        yield return new WaitForSeconds(0.25f);
+        aimReticle.SetActive(false);
+    }
+
 
     void OnMove(InputAction.CallbackContext context)
     {
@@ -96,17 +118,19 @@ public class CameraController : MonoBehaviour
         if (!GetComponent<PlayerQuickActions>().hasBow) return;
         if (context.ReadValueAsButton())
         {
+            rig.enabled = true;
             standardCamera.SetActive(false);
             aimCamera.SetActive(true);
-
-            //Allow time for the camera to blend before enabling the UI
+            currentStyle = CameraStyle.Aiming;
             StartCoroutine(ShowReticle());
         }
         else
         {
+            rig.enabled = false;
+            currentStyle = CameraStyle.Basic;
             standardCamera.SetActive(true);
             aimCamera.SetActive(false);
-            aimReticle.SetActive(false);
+            StartCoroutine(HideReticle());
         }
     }
 }
