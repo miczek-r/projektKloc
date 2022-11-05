@@ -9,9 +9,10 @@ public class MapPreview : MonoBehaviour
     public MeshRenderer meshRenderer;
 
 
-    public enum DrawMode { NoiseMap, Mesh, FalloffMap };
+    public enum DrawMode { NoiseMap, Mesh, FalloffMap, Biomes };
     public DrawMode drawMode;
 
+    public NoiseSettings noiseSettings;
     public MeshSettings meshSettings;
     public HeightMapSettings heightMapSettings;
     public TextureData textureData;
@@ -24,15 +25,30 @@ public class MapPreview : MonoBehaviour
     public int editorPreviewLOD;
     public bool autoUpdate;
 
+    public int biomeGrid;
+    public float noiseMult;
+    public float noiseDist;
 
+    public BiomeType[] biomes;
+    public int seed;
+
+    
 
 
     public void DrawMapInEditor()
     {
+        int[,] biomeMap = Noise.GenerateBiomeMap(meshSettings.numVertsPerLine, meshSettings.numVertsPerLine, seed, biomeGrid, biomes.Length, noiseMult, noiseDist);
+        Color[] biomesColorMap = new Color[meshSettings.numVertsPerLine * meshSettings.numVertsPerLine];
         textureData.ApplyToMaterial(terrainMaterial);
         textureData.UpdateMeshHeights(terrainMaterial, heightMapSettings.minHeight, heightMapSettings.maxHeight);
         HeightMap heightMap = HeightMapGenerator.GenerateHeightMap(meshSettings.numVertsPerLine, meshSettings.numVertsPerLine, heightMapSettings, Vector2.zero);
-
+        for (int y = 0; y < meshSettings.numVertsPerLine; y++)
+        {
+            for (int x = 0; x < meshSettings.numVertsPerLine; x++)
+            {
+                biomesColorMap[y * meshSettings.numVertsPerLine + x] = biomes[biomeMap[x, y]].color;
+            }
+        }
         if (drawMode == DrawMode.NoiseMap)
         {
             DrawTexture(TextureGenerator.TextureFromHeightMap(heightMap));
@@ -45,6 +61,8 @@ public class MapPreview : MonoBehaviour
         {
             DrawTexture(TextureGenerator.TextureFromHeightMap(new HeightMap(FalloffGenerator.GenerateFalloffMap(meshSettings.numVertsPerLine), 0, 1)));
         }
+         else if (drawMode == DrawMode.Biomes)
+            DrawTexture(TextureGenerator.TextureFromColourMap(biomesColorMap,meshSettings.numVertsPerLine, meshSettings.numVertsPerLine));
     }
 
 
@@ -102,6 +120,13 @@ public class MapPreview : MonoBehaviour
             textureData.OnValuesUpdated += OnTextureValuesUpdated;
         }
 
+    }
+    [System.Serializable]
+    public struct BiomeType
+    {
+        public string name;
+        public float noiseHeight;
+        public Color color;
     }
 
 }
