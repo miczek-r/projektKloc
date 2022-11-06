@@ -4,7 +4,7 @@ using UnityEngine;
 
 public static class HeightMapGenerator
 {
-
+   
     public static HeightMap GenerateHeightMap(int width, int height, HeightMapSettings settings, Vector2 sampleCentre)
     {
         float[,] values = Noise.GenerateNoiseMap(width, height, settings.noiseSettings, sampleCentre);
