@@ -13,7 +13,10 @@ public class PlayerStats : EntityStats
     public int maxMana = 100;
     public int stamina;
     public int maxStamina = 100;
-
+    public float currentExp = 0;
+    public float nextLvlExp = 100;
+    public float multiplie = 1.7f;
+    public int Level = 1;
     public override void Die()
     {
         CancelInvoke();
@@ -21,7 +24,15 @@ public class PlayerStats : EntityStats
         anim.SetBool("Death", true);
         dead = true;
     }
-
+    public void LevelUp()
+    {
+        if (currentExp >= nextLvlExp)
+        {
+            Level++;
+            nextLvlExp *= multiplie;
+            currentExp = 0;
+        }
+    }
     void Start()
     {
 

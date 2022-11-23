@@ -1,3 +1,4 @@
+using Assets.Scripts.Quest;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -12,8 +13,9 @@ public class PlayerStateMachine : MonoBehaviour
     private PlayerInput _playerInput;
     private Animator _animator;
     private PlayerStats _playerStats;
+    private QuestSupervisor _questSupervisor;
     public GameObject melee;
-
+    
     [Header("Ground Check")]
     public LayerMask whatIsGround;
     private bool _isGrounded;
@@ -54,6 +56,7 @@ public class PlayerStateMachine : MonoBehaviour
     public CharacterController CharacterController { get { return _characterController; } }
     public Animator Animator { get { return _animator; } }
     public PlayerStats PlayerStats { get { return _playerStats; } }
+    public QuestSupervisor QuestSupervisor { get { return _questSupervisor; } }
     public Vector3 CurrentMovement { get { return _currentMovement; } set { _currentMovement = value; } }
     public GameObject Melee { get { return melee; } }
     public bool IsGrounded { get { return _isGrounded; } }
@@ -96,6 +99,7 @@ public class PlayerStateMachine : MonoBehaviour
         _playerInput.Player.Gather.started += OnGather;
         _playerInput.Player.Aim.started += OnBlock;
         _playerInput.Player.Aim.canceled += OnBlock;
+        _questSupervisor = new QuestSupervisor();
     }
 
     void Start()
@@ -110,7 +114,7 @@ public class PlayerStateMachine : MonoBehaviour
 
     private Vector3 _targetDirection;
     public Vector3 TargetDirection { get { return _targetDirection; } set { _targetDirection = value; } }
-
+    
     void Update()
     {
           Vector3 spherePosition = new Vector3(transform.position.x, transform.position.y - GroundedOffset,
@@ -142,6 +146,11 @@ public class PlayerStateMachine : MonoBehaviour
     {
         _damageTaken.Enqueue(10);
         _attackedBy.Enqueue(transform.root.GetInstanceID());
+        var achiv = _questSupervisor.Achievments.ReturnAchievmentsDictionary();
+        foreach (var item in achiv.Keys)
+        {
+            Debug.Log($"{item}-{achiv[item]}");
+        }
         _isDamaged = true;
         StartCoroutine(nameof(DamagedCd));
     }
