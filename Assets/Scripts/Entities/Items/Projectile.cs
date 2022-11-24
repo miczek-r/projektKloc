@@ -5,18 +5,34 @@ using UnityEngine;
 public class Projectile : MonoBehaviour
 {
     private Rigidbody _projectileRigidbody;
-    private void Awake(){
+    public int damage;
+
+    private void Awake()
+    {
         _projectileRigidbody = GetComponent<Rigidbody>();
     }
 
-    private void Start(){
-        float speed = 40f;
+    private void Start()
+    {
+        float speed = 60f;
         _projectileRigidbody.velocity = transform.forward * speed;
     }
 
-   private void OnTriggerEnter(Collider other) {
-        if(other.transform.root && other.transform.root.CompareTag("Player"))return;
-        _projectileRigidbody.isKinematic = true;
-        transform.parent = other.transform;
+    private void OnTriggerEnter(Collider other)
+    {
+        if (other.transform.CompareTag("Enemy"))
+        {
+            _projectileRigidbody.isKinematic = true;
+            transform.parent = other.transform.GetChild(0);
+            other.transform.GetComponent<EntityStats>().TakeDamage(damage);
+            GetComponent<Projectile>().enabled = false;
+        }
+        else
+        {
+            if (other.gameObject.layer == 11)
+                return;
+            _projectileRigidbody.isKinematic = true;
+            Destroy(this, 60);
+        }
     }
 }

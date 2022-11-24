@@ -6,10 +6,12 @@ using UnityEngine;
 public class TaskGoToTarget : Node
 {
     private Transform _transform;
+    private Animator _animator;
 
     public TaskGoToTarget(Transform transform)
     {
         _transform = transform;
+        _animator = transform.GetComponent<Animator>();
     }
 
     public override NodeState Evaluate()
@@ -17,10 +19,11 @@ public class TaskGoToTarget : Node
         Transform target = (Transform)GetData("target");
         if (Vector3.Distance(_transform.position, target.position) > 0.01f)
         {
+            _animator.SetBool("isMoving", true);
             _transform.position = Vector3.MoveTowards(
                 _transform.position,
                 target.position,
-                Time.deltaTime * 1.0f
+                Time.deltaTime * 6.0f
             );
             _transform.LookAt(target.position);
         }

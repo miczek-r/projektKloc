@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -56,6 +57,9 @@ public class TerrainChunk
         meshObject.transform.parent = parent;
         SetVisible(false);
 
+        SurroundingObjects = TreeSpawm.GenerateObjects(position, meshSettings.numVertsPerLine, meshObject);
+
+
         lodMeshes = new LODMesh[detailLevels.Length];
         for (int i = 0; i < detailLevels.Length; i++)
         {
@@ -68,8 +72,9 @@ public class TerrainChunk
         }
 
         maxViewDst = detailLevels[detailLevels.Length - 1].visibleDstThreshold;
-        SurroundingObjects = TreeSpawm.GenerateObjects(position, meshSettings.numVertsPerLine,meshObject);
 
+        // SurroundingObjects[1].transform.position.y = heightMap.values
+        // SurroundingObjects[1].transform.position = new Vector3(SurroundingObjects[1].transform.position.x, 0, position.y);
 
 
     }
@@ -132,10 +137,27 @@ public class TerrainChunk
                     {
                         previousLODIndex = lodIndex;
                         meshFilter.mesh = lodMesh.mesh;
+
                     }
                     else if (!lodMesh.hasRequestedMesh)
                     {
                         lodMesh.RequestMesh(heightMap, meshSettings);
+
+                        for (int i = SurroundingObjects.Count - 1; i >= 0; i--)
+                        {
+
+
+                            int a = ((int)SurroundingObjects[i].transform.localPosition.x * 98 / 102 + 98) * 101 / 196;
+                            int b = ((int)SurroundingObjects[i].transform.localPosition.z * 98 / 102 + 98) * 101 / 196;
+                            SurroundingObjects[i].transform.localPosition = new Vector3((SurroundingObjects[i].transform.localPosition.x), ((heightMap.values[a, b]) - 0.5f), (SurroundingObjects[i].transform.localPosition.z * -1));
+                            if (heightMap.values[a, b] < 10)
+                            {
+                                UnityEngine.Object.Destroy(SurroundingObjects[i]);
+                                SurroundingObjects.RemoveAt(i);
+                            }
+                        }
+
+
                     }
                 }
 

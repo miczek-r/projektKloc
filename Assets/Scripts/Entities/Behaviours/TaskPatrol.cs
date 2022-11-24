@@ -29,7 +29,6 @@ public class TaskPatrol : Node
             if (_waitLeft < 0.0f)
             {
                 _isWaiting = false;
-                _animator.SetBool("isMoving",true);
             }
         }
         else
@@ -40,15 +39,16 @@ public class TaskPatrol : Node
                 _waitLeft = _waitTime;
                 _isWaiting = true;
                 nextWaypoint = GetNextPatroPosition();
-                _animator.SetBool("isMoving",false);
+                _animator.SetBool("isMoving", false);
             }
             else
             {
+                _animator.SetBool("isMoving", true);
                 nextWaypoint.y = _transform.position.y;
                 _transform.position = Vector3.MoveTowards(
                     _transform.position,
                     nextWaypoint,
-                    Time.deltaTime * 1.0f
+                    Time.deltaTime * 2.0f
                 );
                 _transform.LookAt(nextWaypoint);
             }
