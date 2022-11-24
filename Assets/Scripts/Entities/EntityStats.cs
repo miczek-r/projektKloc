@@ -1,47 +1,47 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class EntityStats : MonoBehaviour
 {
     private bool _isDead = false;
-    public bool IsDead { get { return _isDead; } }
+    public bool IsDead
+    {
+        get { return _isDead; }
+    }
     public int maxHealth = 100;
     public int currentHealth { get; private set; }
 
     public Stat damage;
     public Stat armor;
 
-    HealthBarSlider healthBarSlider2;
-    public virtual void Die()
-    {
+    public virtual void Die() { }
 
-    }
-
-    void Awake()
+    public virtual void Awake()
     {
         currentHealth = maxHealth;
     }
 
-    public void Regenerate(int health)
+    public virtual void Regenerate(int health)
     {
-        if (currentHealth == maxHealth) return;
+        if (currentHealth == maxHealth)
+            return;
 
         currentHealth += health;
 
-        if (currentHealth > maxHealth)
+        if (currentHealth >= maxHealth)
         {
             currentHealth = maxHealth;
         }
     }
 
-    public void TakeDamage(int damage)
+    public virtual void TakeDamage(int damage)
     {
         damage -= armor.GetValue();
         damage = Mathf.Clamp(damage, 0, int.MaxValue);
 
         currentHealth -= damage;
-        healthBarSlider2.setHealth(currentHealth);
         if (currentHealth <= 0)
         {
             _isDead = true;

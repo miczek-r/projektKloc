@@ -4,7 +4,8 @@ using UnityEngine;
 
 public class PlayerGatherState : PlayerBaseState
 {
-    public PlayerGatherState(PlayerStateMachine context, PlayerStateFactory playerStateFactory) : base(context, playerStateFactory)
+    public PlayerGatherState(PlayerStateMachine context, PlayerStateFactory playerStateFactory)
+        : base(context, playerStateFactory)
     {
         IsRootState = true;
     }
@@ -29,6 +30,7 @@ public class PlayerGatherState : PlayerBaseState
 
     public override void ExitState()
     {
+        Ctx.pickupManager.PickupItems();
         Ctx.MovementLock = false;
         Ctx.IsGathering = false;
     }
