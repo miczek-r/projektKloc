@@ -12,6 +12,7 @@ public class EntityStats : MonoBehaviour
     public Stat damage;
     public Stat armor;
 
+    HealthBarSlider healthBarSlider2;
     public virtual void Die()
     {
 
@@ -40,7 +41,7 @@ public class EntityStats : MonoBehaviour
         damage = Mathf.Clamp(damage, 0, int.MaxValue);
 
         currentHealth -= damage;
-
+        healthBarSlider2.setHealth(currentHealth);
         if (currentHealth <= 0)
         {
             _isDead = true;

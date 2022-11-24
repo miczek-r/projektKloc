@@ -14,6 +14,9 @@ public class PlayerStats : EntityStats
     public int stamina;
     public int maxStamina = 100;
 
+    [Header("Bars")]
+    public HealthBarSlider healthBarSlider;
+    public StaminaBar staminaBar;
     public override void Die()
     {
         CancelInvoke();
@@ -24,20 +27,25 @@ public class PlayerStats : EntityStats
 
     void Start()
     {
-
         mana = maxMana;
         stamina = maxStamina;
         InvokeRepeating(nameof(Regeneration), 2.0f, 1.0f);
+        healthBarSlider.setMaxHealth(maxHealth);
+        healthBarSlider.setHealth(currentHealth/5);
+        staminaBar.setMaxStamina(stamina);
     }
 
     void Regeneration()
     {
         Regenerate(1);
+        healthBarSlider.setHealth(currentHealth);
         stamina += 5;
+        staminaBar.setStamina(stamina);
         if (stamina > maxStamina)
         {
             stamina = maxStamina;
         }
+        
         mana += 1;
         if (mana > maxMana)
         {
