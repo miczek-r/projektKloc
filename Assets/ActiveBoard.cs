@@ -5,7 +5,6 @@ using UnityEngine.UI;
 
 public class ActiveBoard : MonoBehaviour
 {
-    private bool isImgOn;
     public GameObject panel;
     void Update()
     {
@@ -13,16 +12,13 @@ public class ActiveBoard : MonoBehaviour
 
         if (Input.GetKeyDown("q"))
         {
-            if (isImgOn == true)
+            if (panel.active.Equals(true))
             {
                 panel.SetActive(false);
-                isImgOn = false;
             }
             else
             {
-                
                 panel.SetActive(true);
-                isImgOn = true;
             }
         }
     }

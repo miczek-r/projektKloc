@@ -32,6 +32,7 @@ public class PlayerAttackState : PlayerBaseState
         Ctx.Animator.SetBool("isAttacking", true);
         if(!Ctx.GetComponent<PlayerQuickActions>().hasBow)return;
         Ctx.SpawnArrow();
+        Ctx.QuestSupervisor.Achievments.Increment("attack");
     }
 
     public override void ExitState()

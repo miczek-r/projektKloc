@@ -32,6 +32,7 @@ public class CheckForPlayerInAttackRange : Node
             return state;
         }
 
+        _animator.SetBool("isAttacking", false);
         state = NodeState.FAILURE;
         return state;
     }

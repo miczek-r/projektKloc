@@ -22,13 +22,14 @@ public class CheckForPlayerInFOVRange : Node
                 HostileEntityBT.fovRange
             );
             foreach (var collider in colliders)
-                if (collider.transform.parent?.tag == "Player")
+            {
+                if (collider.tag == "Player")
                 {
-                    Debug.Log("Player Detected");
-                    parent.parent.SetData("target", collider.transform.parent);
+                    parent.parent.SetData("target", collider.transform);
                     state = NodeState.SUCCESS;
                     return state;
                 }
+            }
             state = NodeState.FAILURE;
             return state;
         }
