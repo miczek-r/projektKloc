@@ -23,6 +23,7 @@ public class PlayerBlockState : PlayerBaseState
     {
         InitializeSubState();
         Ctx.Animator.SetBool("isBlocking", true);
+        Ctx.QuestSupervisor.Achievments.Increment("block");
     }
 
     public override void ExitState()

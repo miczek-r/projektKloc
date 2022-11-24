@@ -26,6 +26,7 @@ public class PlayerJumpState : PlayerBaseState
     {
         InitializeSubState();
         Jump();
+        Ctx.QuestSupervisor.Achievments.Increment("jump");
     }
 
     public override void ExitState()

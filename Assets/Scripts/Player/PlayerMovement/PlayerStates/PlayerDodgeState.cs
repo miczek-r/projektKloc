@@ -24,6 +24,7 @@ public class PlayerDodgeState : PlayerBaseState
         timeToEnd = Ctx._dodgeTime;
         //Ctx.MovementLock = true;
         Ctx.Animator.SetBool("isDodging", true);
+        Ctx.QuestSupervisor.Achievments.Increment("dodge");
         InitializeSubState();
     }
 

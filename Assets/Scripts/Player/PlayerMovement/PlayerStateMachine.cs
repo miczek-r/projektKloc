@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using Assets.Scripts.Quest;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -12,8 +13,9 @@ public class PlayerStateMachine : MonoBehaviour
     private PlayerInput _playerInput;
     private Animator _animator;
     private PlayerStats _playerStats;
-    public GameObject melee;
+    private QuestSupervisor _questSupervisor;
     public PickupManager pickupManager;
+    public GameObject melee;
 
     [Header("Ground Check")]
     public LayerMask whatIsGround;
@@ -70,6 +72,10 @@ public class PlayerStateMachine : MonoBehaviour
     public PlayerStats PlayerStats
     {
         get { return _playerStats; }
+    }
+    public QuestSupervisor QuestSupervisor
+    {
+        get { return _questSupervisor; }
     }
     public Vector3 CurrentMovement
     {
@@ -182,6 +188,7 @@ public class PlayerStateMachine : MonoBehaviour
         _playerInput.Player.Gather.started += OnGather;
         _playerInput.Player.Aim.started += OnBlock;
         _playerInput.Player.Aim.canceled += OnBlock;
+        _questSupervisor = new QuestSupervisor();
     }
 
     void Start()
@@ -250,6 +257,11 @@ public class PlayerStateMachine : MonoBehaviour
     {
         _damageTaken.Enqueue(10);
         _attackedBy.Enqueue(transform.root.GetInstanceID());
+        var achiv = _questSupervisor.Achievments.ReturnAchievmentsDictionary();
+        foreach (var item in achiv.Keys)
+        {
+            Debug.Log($"{item}-{achiv[item]}");
+        }
         _isDamaged = true;
         StartCoroutine(nameof(DamagedCd));
     }
