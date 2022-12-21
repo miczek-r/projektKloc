@@ -57,6 +57,7 @@ public class TreeSpawm : MonoBehaviour
 
                         // Instantiate and place element in world.
                         GameObject newElement = Instantiate(element.GetRandom());
+                        newElement.layer = 10;
                         newElement.transform.parent = parent.transform;
                         newElement.transform.position = position + offset;
                         newElement.transform.eulerAngles = rotation;
