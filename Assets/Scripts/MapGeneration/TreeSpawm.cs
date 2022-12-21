@@ -3,7 +3,7 @@ using UnityEngine;
 
 public class TreeSpawm : MonoBehaviour
 {
-    public static int elementSpacing = 10; // The spacing between element placements. Basically grid size.
+    public static int elementSpacing = 7; // The spacing between element placements. Basically grid size.
 
     public static Element[] elements;
     public Element[] objects;

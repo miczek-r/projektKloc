@@ -67,7 +67,7 @@ namespace BehaviourTree
                 return true;
             }
             Node node = parent;
-            while (node is null)
+            while (node is not null)
             {
                 bool cleared = node.ClearData(key);
                 if (cleared)

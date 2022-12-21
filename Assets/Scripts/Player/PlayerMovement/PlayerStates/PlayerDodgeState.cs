@@ -4,10 +4,12 @@ using UnityEngine;
 
 public class PlayerDodgeState : PlayerBaseState
 {
-    public PlayerDodgeState(PlayerStateMachine context, PlayerStateFactory playerStateFactory) : base(context, playerStateFactory)
+    public PlayerDodgeState(PlayerStateMachine context, PlayerStateFactory playerStateFactory)
+        : base(context, playerStateFactory)
     {
         IsRootState = true;
     }
+
     private float timeToEnd;
 
     public override void CheckSwitchStates()
@@ -21,9 +23,16 @@ public class PlayerDodgeState : PlayerBaseState
 
     public override void EnterState()
     {
+        if (!Ctx.PlayerStats.UseStamina(50))
+        {
+            SwitchState(Factory.Grounded());
+            return;
+        }
+
         timeToEnd = Ctx._dodgeTime;
         //Ctx.MovementLock = true;
         Ctx.Animator.SetBool("isDodging", true);
+        Ctx.QuestSupervisor.Achievments.Increment("dodge");
         InitializeSubState();
     }
 

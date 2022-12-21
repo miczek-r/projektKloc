@@ -4,7 +4,8 @@ using UnityEngine;
 
 public class PlayerFallState : PlayerBaseState
 {
-    public PlayerFallState(PlayerStateMachine context, PlayerStateFactory playerStateFactory) : base(context, playerStateFactory)
+    public PlayerFallState(PlayerStateMachine context, PlayerStateFactory playerStateFactory)
+        : base(context, playerStateFactory)
     {
         IsRootState = true;
     }
@@ -40,16 +41,15 @@ public class PlayerFallState : PlayerBaseState
         }
     }
 
-        private float _terminalVelocity = 53.0f;
-        public float Gravity = -15.0f;
+    private float _terminalVelocity = 53.0f;
+    public float Gravity = -15.0f;
 
     public override void UpdateState()
     {
         if (Ctx.VerticalVelocity < _terminalVelocity)
-            {
-                Ctx.VerticalVelocity += Gravity * Time.deltaTime;
-            }
-            Debug.Log("Falling");
+        {
+            Ctx.VerticalVelocity += Gravity * Time.deltaTime;
+        }
         CheckSwitchStates();
     }
 }

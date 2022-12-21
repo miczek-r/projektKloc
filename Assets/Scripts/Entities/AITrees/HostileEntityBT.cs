@@ -5,11 +5,22 @@ using UnityEngine;
 
 public class HostileEntityBT : BehaviourTree.Tree
 {
-    public static Vector3 startingPosition;
+    public Vector3 startingPosition;
     public static float iddleRadius = 2.0f;
     public static float fovRange = 5.0f;
-    public static float attackRange = 1.0f;
+    public static float attackRange = 2.0f;
+    public bool isReturning = false;
     private Animator _animator;
+
+    void OnDrawGizmos()
+    {
+        Gizmos.color = Color.green;
+        Gizmos.DrawSphere(transform.position, fovRange);
+        Gizmos.color = Color.blue;
+        Gizmos.DrawSphere(transform.position, fovRange * 2f);
+        Gizmos.color = Color.red;
+        Gizmos.DrawSphere(transform.position, attackRange);
+    }
 
     protected override Node SetupTree()
     {
@@ -20,6 +31,13 @@ public class HostileEntityBT : BehaviourTree.Tree
             {
                 new Sequence(
                     new List<Node> { new CheckForDeadStatus(transform), new TaskDie(transform) }
+                ),
+                new Sequence(
+                    new List<Node>
+                    {
+                        new CheckForOutOfRadius(transform, startingPosition),
+                        new TaskReturnToSpawnPoint(transform, startingPosition)
+                    }
                 ),
                 new Sequence(
                     new List<Node>
@@ -42,7 +60,7 @@ public class HostileEntityBT : BehaviourTree.Tree
                         new TaskGoToTarget(transform)
                     }
                 ),
-                new TaskPatrol(transform, _animator)
+                new TaskPatrol(transform, _animator, startingPosition)
             }
         );
 
@@ -55,7 +73,7 @@ public class HostileEntityBT : BehaviourTree.Tree
     private void OnTriggerEnter(Collider other)
     {
         if (
-            other.transform.root.CompareTag("Player")
+            (other.transform.root.CompareTag("Player"))
             && !_attackedBy.Contains(other.transform.root.GetInstanceID())
         )
         {
@@ -65,6 +83,13 @@ public class HostileEntityBT : BehaviourTree.Tree
             );
             _attackedBy.Enqueue(other.transform.root.GetInstanceID());
             StartCoroutine(nameof(DamagedCd));
+        }
+        if (
+            other.transform.root.CompareTag("Projectile")
+            && !_attackedBy.Contains(other.transform.root.GetInstanceID())
+        )
+        {
+            _damageTaken.Enqueue(other.transform.GetComponent<Projectile>().damage);
         }
     }
 

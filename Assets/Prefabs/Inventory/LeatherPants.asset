@@ -1,0 +1,21 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 57613e3194b61944aaa85008b54e484d, type: 3}
+  m_Name: LeatherPants
+  m_EditorClassIdentifier: 
+  name: Crushers
+  icon: {fileID: 21300000, guid: 23b95183104eae84886c2d6b281abc70, type: 3}
+  isDefaultItem: 0
+  equipSlot: 2
+  gameObject: {fileID: 1490581763868846500, guid: ef14aef8a88e15148925941bb0a83276, type: 3}
+  armorModifier: 2
+  damageModifier: 0

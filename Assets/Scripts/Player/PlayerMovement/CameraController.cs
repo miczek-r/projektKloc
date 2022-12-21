@@ -19,6 +19,7 @@ public class CameraController : MonoBehaviour
 
     public GameObject standardCamera;
     public GameObject aimCamera;
+    public GameObject equipmentCamera;
     public GameObject aimReticle;
     public Rig rig;
 
@@ -26,10 +27,12 @@ public class CameraController : MonoBehaviour
 
     float horizontalInput;
     float verticalInput;
+
     public enum CameraStyle
     {
         Basic,
-        Aiming
+        Aiming,
+        Equipment
     }
 
     public PlayerInput playerInput;
@@ -45,26 +48,37 @@ public class CameraController : MonoBehaviour
         playerInput.Player.Move.canceled += OnMove;
         playerInput.Player.Aim.started += OnAim;
         playerInput.Player.Aim.canceled += OnAim;
-
     }
 
     private void Update()
     {
         CreateARay();
 
-        Vector3 viewDir = transform.position - new Vector3(mainCamera.position.x, transform.position.y, mainCamera.position.z);
+        Vector3 viewDir =
+            transform.position
+            - new Vector3(mainCamera.position.x, transform.position.y, mainCamera.position.z);
         orientation.forward = viewDir.normalized;
         if (currentStyle == CameraStyle.Basic)
         {
-            Vector3 inputDir = orientation.forward * verticalInput + orientation.right * horizontalInput;
+            Vector3 inputDir =
+                orientation.forward * verticalInput + orientation.right * horizontalInput;
 
             if (inputDir != Vector3.zero)
-                playerObj.forward = Vector3.Slerp(playerObj.forward, inputDir.normalized, Time.deltaTime * rotationSpeed);
+                playerObj.forward = Vector3.Slerp(
+                    playerObj.forward,
+                    inputDir.normalized,
+                    Time.deltaTime * rotationSpeed
+                );
         }
-
         else if (currentStyle == CameraStyle.Aiming)
         {
-            Vector3 dirToCombatLookAt = combatLookAt.position - new Vector3(mainCamera.position.x, combatLookAt.position.y, mainCamera.position.z);
+            Vector3 dirToCombatLookAt =
+                combatLookAt.position
+                - new Vector3(
+                    mainCamera.position.x,
+                    combatLookAt.position.y,
+                    mainCamera.position.z
+                );
             orientation.forward = dirToCombatLookAt.normalized;
 
             playerObj.forward = dirToCombatLookAt.normalized;
@@ -74,14 +88,16 @@ public class CameraController : MonoBehaviour
     public LayerMask aimColiderMask = new LayerMask();
     public Transform debugTransform;
     public Vector3 mouseWorldPosition = Vector3.zero;
-    private void CreateARay(){
+
+    private void CreateARay()
+    {
         Vector2 screenCenterPoint = new Vector2(Screen.width / 2f, Screen.height / 2f);
         Ray ray = Camera.main.ScreenPointToRay(screenCenterPoint);
-        if(Physics.Raycast(ray, out RaycastHit raycastHit, 999f, aimColiderMask)){
+        if (Physics.Raycast(ray, out RaycastHit raycastHit, 999f, aimColiderMask))
+        {
             debugTransform.position = raycastHit.point;
             mouseWorldPosition = raycastHit.point;
         }
-
     }
 
     IEnumerator ShowReticle()
@@ -89,25 +105,25 @@ public class CameraController : MonoBehaviour
         yield return new WaitForSeconds(0.25f);
         aimReticle.SetActive(true);
     }
+
     IEnumerator HideReticle()
     {
         yield return new WaitForSeconds(0.25f);
         aimReticle.SetActive(false);
     }
 
-
     void OnMove(InputAction.CallbackContext context)
     {
         Vector2 input = context.ReadValue<Vector2>();
         horizontalInput = input.x;
         verticalInput = input.y;
-
     }
 
     void OnEnable()
     {
         playerInput.Player.Enable();
     }
+
     void OnDisable()
     {
         playerInput.Player.Disable();
@@ -115,7 +131,10 @@ public class CameraController : MonoBehaviour
 
     void OnAim(InputAction.CallbackContext context)
     {
-        if (!GetComponent<PlayerQuickActions>().hasBow) return;
+        if (currentStyle == CameraStyle.Equipment)
+            return;
+        if (!GetComponent<PlayerQuickActions>().hasBow)
+            return;
         if (context.ReadValueAsButton())
         {
             rig.enabled = true;
@@ -131,6 +150,29 @@ public class CameraController : MonoBehaviour
             standardCamera.SetActive(true);
             aimCamera.SetActive(false);
             StartCoroutine(HideReticle());
+        }
+    }
+
+    public void OnInventory(bool isInventoryOpen)
+    {
+        if (!isInventoryOpen)
+        {
+            Cursor.lockState = CursorLockMode.Locked;
+            Cursor.visible = false;
+            equipmentCamera.SetActive(false);
+            standardCamera.SetActive(true);
+            currentStyle = CameraStyle.Basic;
+            Debug.Log("cursor hidden");
+        }
+        else
+        {
+            currentStyle = CameraStyle.Equipment;
+            standardCamera.SetActive(false);
+            aimCamera.SetActive(false);
+            equipmentCamera.SetActive(true);
+            Cursor.visible = true;
+            Cursor.lockState = CursorLockMode.None;
+            Debug.Log("cursor visible");
         }
     }
 }
