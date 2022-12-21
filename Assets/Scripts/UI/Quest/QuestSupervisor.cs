@@ -3,15 +3,17 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using UnityEngine;
+using static ButtonList;
 
 namespace Assets.Scripts.Quest
 {
-    public class QuestSupervisor
+    public class QuestSupervisor 
     {
         public List<Quests> quests = new();
         public Achievments Achievments = new();
-        int firstQuestsValue=10;
-        
+        int firstQuestsValue = 10;
+
         public void AddQuest(Quests quest)
         {
            quests.Add(quest);
@@ -21,24 +23,19 @@ namespace Assets.Scripts.Quest
         {
             foreach (var quest in quests)
             {
-                //quest.CurrentValue = Achievments.GetValue("jump");
-                quest.EndValue = quest.CurrentValue + firstQuestsValue;
+                quest.CurrentValue = Achievments.GetValue(quest.FieldName);
+                quest.EndValue = firstQuestsValue+quest.StartValue;
                 if (quest.CurrentValue >= quest.EndValue)
                 {
                     quest.IsDone = true;
                 }
             }
         }
-        public void Question(object sender, int b)
-        {
-            CheckQuests();
-        }
         public QuestSupervisor()
         {
-            //chyba tu sprawdzic czy sie przepelnia ??
-            //achievments.ThresholdReached += Question;
-            quests.Add(new Quests() { Name = "Jump",Description="Podskocz 10 razy",exp=50,CurrentValue=Achievments.GetValue("jump")});
-            quests.Add(new Quests() { Name = "Dodge", Description = "Użyj dodge 10 razy",exp=75,CurrentValue=Achievments.GetValue("dodge")});
+            quests.Add(new Quests() { Name = "Jump",Description="Podskocz 10 razy",exp=50,FieldName="jump"});
+            quests.Add(new Quests() { Name = "Dodge", Description = "Użyj dodge 10 razy",exp=75,FieldName="dodge"});
+            quests.Add(new Quests() { Name = "Enemy", Description = "Zabij 10 przeciwników",exp=125,FieldName= "enemyDead" });
         }
     }
 }

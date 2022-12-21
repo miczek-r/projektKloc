@@ -4,7 +4,6 @@ using UnityEngine;
 
 public class EquipmentManager : MonoBehaviour
 {
-
     #region Singleton
 
     public static EquipmentManager instance;
@@ -23,6 +22,7 @@ public class EquipmentManager : MonoBehaviour
 
     Equipment[] currentEquipment;
 
+    PlayerQuickActions equipmentModelManager;
     public delegate void OnEquipmentChanged(Equipment newItem, Equipment oldItem);
     public OnEquipmentChanged onEquipmentChanged;
 
@@ -30,6 +30,7 @@ public class EquipmentManager : MonoBehaviour
 
     void Start()
     {
+        equipmentModelManager = GetComponent<PlayerQuickActions>();
         inventory = Inventory.instance;
 
         int numSlots = System.Enum.GetNames(typeof(EquipmentSlot)).Length;
@@ -52,7 +53,9 @@ public class EquipmentManager : MonoBehaviour
         {
             onEquipmentChanged.Invoke(newItem, oldItem);
         }
-
+        if (oldItem is not null)
+            equipmentModelManager.UnEquipModel(oldItem);
+        equipmentModelManager.EquipModel(newItem);
         currentEquipment[slotIndex] = newItem;
     }
 
@@ -69,8 +72,8 @@ public class EquipmentManager : MonoBehaviour
             {
                 onEquipmentChanged.Invoke(null, oldItem);
             }
+
+            equipmentModelManager.UnEquipModel(oldItem);
         }
     }
-
-
 }

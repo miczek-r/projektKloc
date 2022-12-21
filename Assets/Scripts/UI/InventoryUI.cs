@@ -5,16 +5,21 @@ using UnityEngine;
 public class InventoryUI : MonoBehaviour
 {
     public Transform itemsParent;
+    public Transform equipmentParent;
 
     Inventory inventory;
+    EquipmentManager equipmentManager;
 
     InventorySlot[] slots;
     private GameObject _inventoryLayout;
+    public GameObject player;
 
     void Start()
     {
+        equipmentManager = EquipmentManager.instance;
+        equipmentManager.onEquipmentChanged += UpdateEquipmentUI;
         inventory = Inventory.instance;
-        inventory.onItemChangedCallback += UpdateUI;
+        inventory.onItemChangedCallback += UpdateBackpackUI;
         _inventoryLayout = transform.GetChild(0).gameObject;
         slots = itemsParent.GetComponentsInChildren<InventorySlot>();
     }
@@ -24,12 +29,14 @@ public class InventoryUI : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.I))
         {
             _inventoryLayout.SetActive(!_inventoryLayout.active);
-            UpdateUI();
+            UpdateBackpackUI();
+            player.GetComponent<CameraController>().OnInventory(_inventoryLayout.active);
+            player.GetComponent<PlayerStateMachine>().enabled = !_inventoryLayout.active;
         }
         ;
     }
 
-    void UpdateUI()
+    void UpdateBackpackUI()
     {
         for (int i = 0; i < slots.Length; i++)
         {
@@ -41,6 +48,24 @@ public class InventoryUI : MonoBehaviour
             {
                 slots[i].ClearSlot();
             }
+        }
+    }
+
+    void UpdateEquipmentUI(Equipment newItem, Equipment oldItem)
+    {
+        if (newItem is not null)
+        {
+            equipmentParent
+                .Find(newItem.equipSlot.ToString())
+                .GetComponent<InventorySlot>()
+                .AddItem(newItem);
+        }
+        else if (oldItem is not null)
+        {
+            equipmentParent
+                .Find(oldItem.equipSlot.ToString())
+                .GetComponent<InventorySlot>()
+                .ClearSlot();
         }
     }
 }

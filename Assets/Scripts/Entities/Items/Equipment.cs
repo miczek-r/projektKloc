@@ -6,7 +6,7 @@ using UnityEngine;
 public class Equipment : Item
 {
     public EquipmentSlot equipSlot;
-
+    public GameObject gameObject;
     public int armorModifier;
     public int damageModifier;
 
@@ -20,5 +20,11 @@ public class Equipment : Item
 
 public enum EquipmentSlot
 {
-    Head, Chest, Legs, Weapon, OfHand
+    Head,
+    Chest,
+    Pants,
+    Weapon,
+    Arrows,
+    Ring,
+    Necklease
 }

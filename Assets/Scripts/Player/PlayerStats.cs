@@ -22,6 +22,7 @@ public class PlayerStats : EntityStats
     public float nextLvlExp = 100;
     public float multiplie = 1.7f;
     public int Level = 1;
+    EquipmentManager equipmentManager;
 
     public override void Die()
     {
@@ -36,13 +37,19 @@ public class PlayerStats : EntityStats
         if (currentExp >= nextLvlExp)
         {
             Level++;
+            currentExp = currentExp-nextLvlExp;
             nextLvlExp *= multiplie;
-            currentExp = 0;
         }
     }
-
+    public void AddExp(int exp)
+    {
+        currentExp+= exp;
+        LevelUp();
+    }
     void Start()
     {
+        equipmentManager = EquipmentManager.instance;
+        equipmentManager.onEquipmentChanged += OnEquipmentChanged;
         mana = maxMana;
         stamina = maxStamina;
         InvokeRepeating(nameof(Regeneration), 2.0f, 1.0f);
@@ -88,13 +95,13 @@ public class PlayerStats : EntityStats
         if (newItem is not null)
         {
             armor.AddModifier(newItem.armorModifier);
-            armor.AddModifier(newItem.damageModifier);
+            damage.AddModifier(newItem.damageModifier);
         }
 
         if (oldItem is not null)
         {
             armor.RemoveModifier(oldItem.armorModifier);
-            armor.RemoveModifier(oldItem.damageModifier);
+            damage.RemoveModifier(oldItem.damageModifier);
         }
     }
 }
