@@ -150,6 +150,8 @@ public class TerrainChunk
                             int a = ((int)SurroundingObjects[i].transform.localPosition.x * 98 / 102 + 98) * 101 / 196;
                             int b = ((int)SurroundingObjects[i].transform.localPosition.z * 98 / 102 + 98) * 101 / 196;
                             SurroundingObjects[i].transform.localPosition = new Vector3((SurroundingObjects[i].transform.localPosition.x), ((heightMap.values[a, b]) - 0.5f), (SurroundingObjects[i].transform.localPosition.z * -1));
+                            EnemyManager check = new EnemyManager();
+                            check.HeightCheck((float)a,(heightMap.values[a, b]),(float)b);
                             if (heightMap.values[a, b] < 10)
                             {
                                 UnityEngine.Object.Destroy(SurroundingObjects[i]);
