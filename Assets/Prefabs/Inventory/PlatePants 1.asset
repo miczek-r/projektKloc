@@ -12,10 +12,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 57613e3194b61944aaa85008b54e484d, type: 3}
   m_Name: PlatePants 1
   m_EditorClassIdentifier: 
-  name: New Item
-  icon: {fileID: 0}
+  name: Plate Legs
+  icon: {fileID: 21300000, guid: c1afa9447e218cf41a533c36e975cb64, type: 3}
   isDefaultItem: 0
-  equipSlot: 0
-  gameObject: {fileID: 0}
-  armorModifier: 0
+  equipSlot: 2
+  gameObject: {fileID: 7230889635057533507, guid: 58afe800ec939e34e84b358abc6b54f1, type: 3}
+  armorModifier: 5
   damageModifier: 0

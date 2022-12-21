@@ -12,10 +12,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 57613e3194b61944aaa85008b54e484d, type: 3}
   m_Name: PlateChest
   m_EditorClassIdentifier: 
-  name: Czapa bandyty
-  icon: {fileID: 21300000, guid: e5600378dd761e64d9423790c482bf36, type: 3}
+  name: Plate Chesplate
+  icon: {fileID: 21300000, guid: feb173372b2011e4a898f1bc12c49a87, type: 3}
   isDefaultItem: 0
-  equipSlot: 0
-  gameObject: {fileID: 4751580709332205507, guid: b3274ff9e9dcda240af82a7a2da90ab6, type: 3}
+  equipSlot: 1
+  gameObject: {fileID: 8892143742535823588, guid: 1cbec0e5818ff1347ba737725e2e13f3, type: 3}
   armorModifier: 10
   damageModifier: 5

@@ -12,10 +12,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 57613e3194b61944aaa85008b54e484d, type: 3}
   m_Name: Bow
   m_EditorClassIdentifier: 
-  name: New Item
-  icon: {fileID: 0}
+  name: Bow
+  icon: {fileID: 21300000, guid: aeb70a3f976808e4c855e9a36679671b, type: 3}
   isDefaultItem: 0
-  equipSlot: 0
-  gameObject: {fileID: 0}
+  equipSlot: 3
+  gameObject: {fileID: 7150387860883710413, guid: c9b34d768f92d3349910a5b115a4c8f6, type: 3}
   armorModifier: 0
-  damageModifier: 0
+  damageModifier: 5

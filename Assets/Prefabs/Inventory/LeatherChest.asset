@@ -12,10 +12,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 57613e3194b61944aaa85008b54e484d, type: 3}
   m_Name: LeatherChest
   m_EditorClassIdentifier: 
-  name: New Item
-  icon: {fileID: 0}
+  name: Bandits Chest
+  icon: {fileID: 21300000, guid: 899b9cda9ea2fae4185d9f9a94030d29, type: 3}
   isDefaultItem: 0
-  equipSlot: 0
-  gameObject: {fileID: 0}
-  armorModifier: 0
+  equipSlot: 1
+  gameObject: {fileID: 8042335147842035264, guid: acadb2a3f3485ed4eb7b519f858ae81c, type: 3}
+  armorModifier: 5
   damageModifier: 0
