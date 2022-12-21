@@ -286,7 +286,7 @@ GameObject:
   m_CorrespondingSourceObject: {fileID: 2991052759931132397, guid: 38edca3edcab4374fb8e9cd560741765, type: 3}
   m_PrefabInstance: {fileID: 7782981880955866175}
   m_PrefabAsset: {fileID: 0}
---- !u!43 &546701055
+--- !u!43 &467250909
 Mesh:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -659,7 +659,7 @@ PrefabInstance:
     - target: {fileID: 407876090849723433, guid: 9a65b9dab674bf1469faed614bafa805, type: 3}
       propertyPath: m_Mesh
       value: 
-      objectReference: {fileID: 546701055}
+      objectReference: {fileID: 467250909}
     - target: {fileID: 407876090955935416, guid: 9a65b9dab674bf1469faed614bafa805, type: 3}
       propertyPath: m_RootOrder
       value: 3
@@ -779,7 +779,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3190951800788440476, guid: f79b190c944a3a941bdd45e0ae9be477, type: 3}
       propertyPath: m_Value
-      value: 0
+      value: 35.5
       objectReference: {fileID: 0}
     - target: {fileID: 7598632487884232887, guid: f79b190c944a3a941bdd45e0ae9be477, type: 3}
       propertyPath: m_AnchoredPosition.y
@@ -998,6 +998,10 @@ PrefabInstance:
       propertyPath: standardCamera
       value: 
       objectReference: {fileID: 314966938}
+    - target: {fileID: 6187823012262611435, guid: 8a4140f6f4cacf24aad3f20c44553a92, type: 3}
+      propertyPath: dead
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 6187823012262611435, guid: 8a4140f6f4cacf24aad3f20c44553a92, type: 3}
       propertyPath: staminaBar
       value: 
