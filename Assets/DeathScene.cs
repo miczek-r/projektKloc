@@ -5,8 +5,12 @@ using UnityEngine.SceneManagement;
 
 public class DeathScene : MonoBehaviour
 {
+    void Start(){
+        Cursor.visible = true;
+        Cursor.lockState = CursorLockMode.Confined;
+    }
     public void PlayGame (){
-        SceneManager.LoadScene(0);
+        SceneManager.LoadScene(1);
     }
 
     public void QuitGame (){

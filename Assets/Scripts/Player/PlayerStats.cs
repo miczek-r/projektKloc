@@ -53,7 +53,6 @@ public class PlayerStats : EntityStats
         expbar.setMaxExp(nextLvlExp);
         expbar.setExp(currentExp);
         InvokeRepeating(nameof(Regeneration), 2.0f, 1.0f);
-
         staminaBar.setMaxStamina(stamina);
     }
 
