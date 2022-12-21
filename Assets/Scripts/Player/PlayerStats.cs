@@ -18,6 +18,7 @@ public class PlayerStats : EntityStats
     [Header("Bars")]
     public HealthBarSlider healthBarSlider;
     public StaminaBar staminaBar;
+    public ExpBar expbar;
     public float currentExp = 0;
     public float nextLvlExp = 100;
     public float multiplie = 1.7f;
@@ -35,6 +36,7 @@ public class PlayerStats : EntityStats
     {
         if (currentExp >= nextLvlExp)
         {
+
             Level++;
             nextLvlExp *= multiplie;
             currentExp = 0;
@@ -42,12 +44,15 @@ public class PlayerStats : EntityStats
     }
 
     void Start()
-    {
+    {        
+        healthBarSlider.setHealth(currentHealth);
+        healthBarSlider.setMaxHealth(maxHealth);
         mana = maxMana;
         stamina = maxStamina;
+        expbar.setMaxExp(nextLvlExp);
+        expbar.setExp(currentExp);
         InvokeRepeating(nameof(Regeneration), 2.0f, 1.0f);
-        healthBarSlider.setMaxHealth(maxHealth);
-        healthBarSlider.setHealth(currentHealth);
+
         staminaBar.setMaxStamina(stamina);
     }
 
