@@ -67,7 +67,6 @@ public class PlayerStats : EntityStats
         expbar.setExp(currentExp);
         text.text = Level.ToString();
         InvokeRepeating(nameof(Regeneration), 2.0f, 1.0f);
-
         staminaBar.setMaxStamina(stamina);
     }
 
