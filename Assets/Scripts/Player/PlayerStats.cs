@@ -1,6 +1,8 @@
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class PlayerStats : EntityStats
 {
@@ -18,6 +20,8 @@ public class PlayerStats : EntityStats
     [Header("Bars")]
     public HealthBarSlider healthBarSlider;
     public StaminaBar staminaBar;
+    public ExpBar expbar;
+    public TMP_Text text;
     public float currentExp = 0;
     public float nextLvlExp = 100;
     public float multiplie = 1.7f;
@@ -37,24 +41,32 @@ public class PlayerStats : EntityStats
         if (currentExp >= nextLvlExp)
         {
             Level++;
-            currentExp = currentExp-nextLvlExp;
+            currentExp = currentExp - nextLvlExp;
             nextLvlExp *= multiplie;
+            expbar.setMaxExp(nextLvlExp);
+            text.text = Level.ToString();
         }
     }
+
     public void AddExp(int exp)
     {
-        currentExp+= exp;
+        currentExp += exp;
         LevelUp();
+        expbar.setExp(currentExp);
     }
+
     void Start()
     {
+        healthBarSlider.setHealth(currentHealth);
+        healthBarSlider.setMaxHealth(maxHealth);
         equipmentManager = EquipmentManager.instance;
         equipmentManager.onEquipmentChanged += OnEquipmentChanged;
         mana = maxMana;
         stamina = maxStamina;
+        expbar.setMaxExp(nextLvlExp);
+        expbar.setExp(currentExp);
+        text.text = Level.ToString();
         InvokeRepeating(nameof(Regeneration), 2.0f, 1.0f);
-        healthBarSlider.setMaxHealth(maxHealth);
-        healthBarSlider.setHealth(currentHealth);
         staminaBar.setMaxStamina(stamina);
     }
 
