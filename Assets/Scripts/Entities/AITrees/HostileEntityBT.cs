@@ -5,11 +5,11 @@ using UnityEngine;
 
 public class HostileEntityBT : BehaviourTree.Tree
 {
-    public static Vector3 startingPosition;
+    public Vector3 startingPosition;
     public static float iddleRadius = 2.0f;
     public static float fovRange = 5.0f;
     public static float attackRange = 2.0f;
-    public static bool isReturning = false;
+    public bool isReturning = false;
     private Animator _animator;
 
     void OnDrawGizmos()
@@ -35,8 +35,8 @@ public class HostileEntityBT : BehaviourTree.Tree
                 new Sequence(
                     new List<Node>
                     {
-                        new CheckForOutOfRadius(transform),
-                        new TaskReturnToSpawnPoint(transform)
+                        new CheckForOutOfRadius(transform, startingPosition),
+                        new TaskReturnToSpawnPoint(transform, startingPosition)
                     }
                 ),
                 new Sequence(
@@ -60,7 +60,7 @@ public class HostileEntityBT : BehaviourTree.Tree
                         new TaskGoToTarget(transform)
                     }
                 ),
-                new TaskPatrol(transform, _animator)
+                new TaskPatrol(transform, _animator, startingPosition)
             }
         );
 

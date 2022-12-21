@@ -26,7 +26,7 @@ public class PeacefulEntityBT : BehaviourTree.Tree
                         new TaskTakeDamage(transform),
                     }
                 ),
-                new TaskPatrol(transform, _animator)
+                new TaskPatrol(transform, _animator, startingPosition)
             }
         );
 

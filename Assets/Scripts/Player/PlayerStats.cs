@@ -1,7 +1,8 @@
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
-using UnityEngine.SceneManagement; 
+using UnityEngine.SceneManagement;
 
 public class PlayerStats : EntityStats
 {
@@ -20,10 +21,12 @@ public class PlayerStats : EntityStats
     public HealthBarSlider healthBarSlider;
     public StaminaBar staminaBar;
     public ExpBar expbar;
+    public TMP_Text text;
     public float currentExp = 0;
     public float nextLvlExp = 100;
     public float multiplie = 1.7f;
     public int Level = 1;
+    EquipmentManager equipmentManager;
 
     public override void Die()
     {
@@ -37,21 +40,32 @@ public class PlayerStats : EntityStats
     {
         if (currentExp >= nextLvlExp)
         {
-
             Level++;
+            currentExp = currentExp - nextLvlExp;
             nextLvlExp *= multiplie;
-            currentExp = 0;
+            expbar.setMaxExp(nextLvlExp);
+            text.text = Level.ToString();
         }
     }
 
+    public void AddExp(int exp)
+    {
+        currentExp += exp;
+        LevelUp();
+        expbar.setExp(currentExp);
+    }
+
     void Start()
-    {        
+    {
         healthBarSlider.setHealth(currentHealth);
         healthBarSlider.setMaxHealth(maxHealth);
+        equipmentManager = EquipmentManager.instance;
+        equipmentManager.onEquipmentChanged += OnEquipmentChanged;
         mana = maxMana;
         stamina = maxStamina;
         expbar.setMaxExp(nextLvlExp);
         expbar.setExp(currentExp);
+        text.text = Level.ToString();
         InvokeRepeating(nameof(Regeneration), 2.0f, 1.0f);
 
         staminaBar.setMaxStamina(stamina);
@@ -94,13 +108,13 @@ public class PlayerStats : EntityStats
         if (newItem is not null)
         {
             armor.AddModifier(newItem.armorModifier);
-            armor.AddModifier(newItem.damageModifier);
+            damage.AddModifier(newItem.damageModifier);
         }
 
         if (oldItem is not null)
         {
             armor.RemoveModifier(oldItem.armorModifier);
-            armor.RemoveModifier(oldItem.damageModifier);
+            damage.RemoveModifier(oldItem.damageModifier);
         }
     }
 }
