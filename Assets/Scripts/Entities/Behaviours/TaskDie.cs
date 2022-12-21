@@ -1,7 +1,9 @@
 using System.Collections;
 using System.Collections.Generic;
+using Assets.Scripts.Quest;
 using BehaviourTree;
 using UnityEngine;
+using UnityEngine.SocialPlatforms.Impl;
 
 public class TaskDie : Node
 {
@@ -10,6 +12,7 @@ public class TaskDie : Node
     private Collider _collider;
     private float _decompositionTime = 5.0f;
     private bool isDecomposing = false;
+    public QuestSupervisor questSupervisor;
 
     public TaskDie(Transform transform)
     {
@@ -35,6 +38,7 @@ public class TaskDie : Node
         else
         {
             _animator.SetBool("isDead", true);
+            questSupervisor.Achievments.Increment("enemyDead");
             isDecomposing = true;
         }
         state = NodeState.RUNNING;

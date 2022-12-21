@@ -8,6 +8,7 @@ public class Achievments
     public int block { get; set; } = 0;
     public int attack { get; set; } = 0;
     public int jump { get; set; } = 0;
+    public int enemyDead { get; set; } = 0;
 
     public void Increment(string name)
     {
