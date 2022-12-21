@@ -37,11 +37,15 @@ public class PlayerStats : EntityStats
         if (currentExp >= nextLvlExp)
         {
             Level++;
+            currentExp = currentExp-nextLvlExp;
             nextLvlExp *= multiplie;
-            currentExp = 0;
         }
     }
-
+    public void AddExp(int exp)
+    {
+        currentExp+= exp;
+        LevelUp();
+    }
     void Start()
     {
         equipmentManager = EquipmentManager.instance;
