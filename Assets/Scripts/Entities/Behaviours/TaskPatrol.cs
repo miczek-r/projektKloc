@@ -9,13 +9,15 @@ public class TaskPatrol : Node
     private Transform _transform;
     private Animator _animator;
     private Vector3 nextWaypoint;
+    private Vector3 _startingPosition;
 
     private float _waitTime = 1.0f;
     private float _waitLeft = 0f;
     private bool _isWaiting = false;
 
-    public TaskPatrol(Transform transform, Animator animator)
+    public TaskPatrol(Transform transform, Animator animator, Vector3 startingPosition)
     {
+        _startingPosition = startingPosition;
         _transform = transform;
         _animator = animator;
         nextWaypoint = GetNextPatroPosition();
@@ -60,6 +62,6 @@ public class TaskPatrol : Node
 
     private Vector3 GetNextPatroPosition()
     {
-        return HostileEntityBT.startingPosition + Random.insideUnitSphere * Random.Range(1f, 10f);
+        return _startingPosition + Random.insideUnitSphere * Random.Range(1f, 10f);
     }
 }

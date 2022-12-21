@@ -6,30 +6,39 @@ using UnityEngine;
 public class CheckForOutOfRadius : Node
 {
     private Transform _transform;
+    Vector3 _startingPosition;
+    bool isReturning = false;
 
-    public CheckForOutOfRadius(Transform transform)
+    public CheckForOutOfRadius(Transform transform, Vector3 startingPosition)
     {
         _transform = transform;
+        _startingPosition = startingPosition;
     }
 
     public override NodeState Evaluate()
     {
         Vector3 targetGoTo = new Vector3(
-            HostileEntityBT.startingPosition.x,
+            _startingPosition.x,
             _transform.position.y,
-            HostileEntityBT.startingPosition.z
+            _startingPosition.z
         );
-        if (HostileEntityBT.isReturning)
-        {
-            state = NodeState.SUCCESS;
-            return state;
-        }
         if (Vector3.Distance(_transform.position, targetGoTo) >= HostileEntityBT.fovRange * 5f)
         {
-            HostileEntityBT.isReturning = true;
+            isReturning = true;
             state = NodeState.SUCCESS;
             return state;
         }
+        if (
+            Vector3.Distance(_transform.position, targetGoTo) >= HostileEntityBT.fovRange
+            && isReturning
+        )
+        {
+            state = NodeState.SUCCESS;
+            return state;
+        }
+        if (isReturning)
+            parent.parent.ClearData("target");
+        isReturning = false;
 
         state = NodeState.FAILURE;
         return state;

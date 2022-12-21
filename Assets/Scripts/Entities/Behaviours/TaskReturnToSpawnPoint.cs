@@ -7,10 +7,12 @@ public class TaskReturnToSpawnPoint : Node
 {
     private Transform _transform;
     private Animator _animator;
+    private Vector3 _startingPosition;
 
-    public TaskReturnToSpawnPoint(Transform transform)
+    public TaskReturnToSpawnPoint(Transform transform, Vector3 startingPosition)
     {
         _transform = transform;
+        _startingPosition = startingPosition;
         _animator = transform.GetComponent<Animator>();
     }
 
@@ -18,16 +20,14 @@ public class TaskReturnToSpawnPoint : Node
     {
         state = NodeState.RUNNING;
         Vector3 targetGoTo = new Vector3(
-            HostileEntityBT.startingPosition.x,
+            _startingPosition.x,
             _transform.position.y,
-            HostileEntityBT.startingPosition.z
+            _startingPosition.z
         );
         if (Vector3.Distance(_transform.position, targetGoTo) < 0.01f)
         {
-            parent.parent.ClearData("target");
 
             _transform.position = targetGoTo;
-            HostileEntityBT.isReturning = false;
             _animator.SetBool("isMoving", false);
         }
         else
