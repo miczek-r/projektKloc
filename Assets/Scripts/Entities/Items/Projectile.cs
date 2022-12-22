@@ -5,6 +5,7 @@ using UnityEngine;
 public class Projectile : MonoBehaviour
 {
     private Rigidbody _projectileRigidbody;
+    public GameObject spawner;
     public int damage;
 
     private void Awake()
@@ -20,11 +21,10 @@ public class Projectile : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        if (other.transform.CompareTag("Enemy"))
+        /*if (other.transform.CompareTag("Enemy"))
         {
             _projectileRigidbody.isKinematic = true;
             transform.parent = other.transform.GetChild(0);
-            other.transform.GetComponent<EntityStats>().TakeDamage(damage);
             GetComponent<Projectile>().enabled = false;
         }
         else
@@ -33,6 +33,6 @@ public class Projectile : MonoBehaviour
                 return;
             _projectileRigidbody.isKinematic = true;
             Destroy(this, 60);
-        }
+        }*/
     }
 }

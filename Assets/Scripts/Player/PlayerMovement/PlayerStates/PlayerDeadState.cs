@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement; 
 
 public class PlayerDeadState : PlayerBaseState
 {
@@ -14,7 +15,8 @@ public class PlayerDeadState : PlayerBaseState
     }
 
     public override void EnterState()
-    {
+    {   
+        SceneManager.LoadScene(2);
         Ctx.Animator.SetBool("isDead", true);
         //Ctx.cameraController.enabled = false;
         Ctx.enabled = false;

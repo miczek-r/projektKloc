@@ -36,15 +36,18 @@ public class EntityStats : MonoBehaviour
         }
     }
 
-    public virtual void TakeDamage(int damage)
+    public virtual int TakeDamage(int damage)
     {
+        Debug.Log(damage + " damage");
+        Debug.Log(armor.GetValue() + " armor");
         damage -= armor.GetValue();
         damage = Mathf.Clamp(damage, 0, int.MaxValue);
-
+        Debug.Log(damage + " damage after");
         currentHealth -= damage;
         if (currentHealth <= 0)
         {
             _isDead = true;
         }
+        return damage;
     }
 }

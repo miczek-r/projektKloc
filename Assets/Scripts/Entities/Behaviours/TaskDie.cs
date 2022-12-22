@@ -10,15 +10,18 @@ public class TaskDie : Node
     private Transform _transform;
     private Animator _animator;
     private Collider _collider;
+    private LootDrop _lootDropManager;
     private float _decompositionTime = 5.0f;
     private bool isDecomposing = false;
-    public QuestSupervisor questSupervisor;
+    private int _expGiven;
 
-    public TaskDie(Transform transform)
+    public TaskDie(Transform transform, int expGiven, LootDrop lootDropManager)
     {
         _transform = transform;
         _animator = transform.GetComponent<Animator>();
         _collider = transform.GetComponent<Collider>();
+        _expGiven = expGiven;
+        _lootDropManager = lootDropManager;
     }
 
     public override NodeState Evaluate()
@@ -38,7 +41,12 @@ public class TaskDie : Node
         else
         {
             _animator.SetBool("isDead", true);
-            questSupervisor.Achievments.Increment("enemyDead");
+            GameObject killer = (GameObject)GetData("lastDamageDealer");
+            killer
+                .GetComponent<PlayerStateMachine>()
+                .QuestSupervisor.Achievments.Increment("enemyDead");
+            killer.GetComponent<PlayerStats>().AddExp(_expGiven);
+            _lootDropManager.GetDrop(_transform.position);
             isDecomposing = true;
         }
         state = NodeState.RUNNING;
