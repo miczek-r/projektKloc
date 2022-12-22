@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 3093248400253926564}
   - component: {fileID: 7463758164609310467}
   - component: {fileID: 5454182921517201590}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: ArrowModel(Clone)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -96,9 +96,9 @@ GameObject:
   - component: {fileID: 4754558578424026132}
   - component: {fileID: -9038553793720760813}
   - component: {fileID: 852156140988088798}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: Arrow
-  m_TagString: Untagged
+  m_TagString: Projectile
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -160,6 +160,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 813f8f11fa59815408391b36bd960473, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  spawner: {fileID: 0}
   damage: 0
 --- !u!96 &852156140988088798
 TrailRenderer:

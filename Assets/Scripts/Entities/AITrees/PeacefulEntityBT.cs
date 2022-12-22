@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using BehaviourTree;
@@ -8,6 +9,14 @@ public class PeacefulEntityBT : BehaviourTree.Tree
     public static Vector3 startingPosition;
     public static float iddleRadius = 2.0f;
     private Animator _animator;
+    private KillableEntityStats _stats;
+    private LootDrop _lootDropManager;
+
+    public void Awake()
+    {
+        _stats = GetComponent<KillableEntityStats>();
+        _lootDropManager = GetComponent<LootDrop>();
+    }
 
     protected override Node SetupTree()
     {
@@ -17,7 +26,11 @@ public class PeacefulEntityBT : BehaviourTree.Tree
             new List<Node>
             {
                 new Sequence(
-                    new List<Node> { new CheckForDeadStatus(transform), new TaskDie(transform) }
+                    new List<Node>
+                    {
+                        new CheckForDeadStatus(transform),
+                        new TaskDie(transform, _stats.ExpGiven, _lootDropManager)
+                    }
                 ),
                 new Sequence(
                     new List<Node>
@@ -34,7 +47,7 @@ public class PeacefulEntityBT : BehaviourTree.Tree
     }
 
     private Queue<int> _attackedBy = new();
-    private Queue<int> _damageTaken = new();
+    private Queue<Tuple<GameObject, int>> _damageTaken = new();
 
     private void OnTriggerEnter(Collider other)
     {
@@ -45,7 +58,10 @@ public class PeacefulEntityBT : BehaviourTree.Tree
         {
             Debug.Log("Damaged");
             _damageTaken.Enqueue(
-                other.transform.root.GetComponent<EntityStats>().damage.GetValue()
+                new Tuple<GameObject, int>(
+                    other.transform.root.gameObject,
+                    other.transform.root.GetComponent<EntityStats>().damage.GetValue()
+                )
             );
             _attackedBy.Enqueue(other.transform.root.GetInstanceID());
             StartCoroutine(nameof(DamagedCd));

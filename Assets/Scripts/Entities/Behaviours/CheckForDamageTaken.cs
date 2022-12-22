@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using BehaviourTree;
@@ -6,9 +7,9 @@ using UnityEngine;
 public class CheckForDamageTaken : Node
 {
     private Transform _transform;
-    private Queue<int> _damageTaken;
+    private Queue<Tuple<GameObject, int>> _damageTaken;
 
-    public CheckForDamageTaken(Transform transform, Queue<int> damageTaken)
+    public CheckForDamageTaken(Transform transform, Queue<Tuple<GameObject, int>> damageTaken)
     {
         _transform = transform;
         _damageTaken = damageTaken;

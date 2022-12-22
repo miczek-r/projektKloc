@@ -10,6 +10,7 @@ public class KillableEntityStats : EntityStats
     public GameObject healthSliderUI;
     public GameObject statusBar;
     public GameObject damageTakenText;
+    public int ExpGiven;
 
     public override void Awake()
     {
