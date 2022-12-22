@@ -3,7 +3,7 @@ using UnityEngine;
 
 public class TreeSpawm : MonoBehaviour
 {
-    public static int elementSpacing = 10; // The spacing between element placements. Basically grid size.
+    public static int elementSpacing = 7; // The spacing between element placements. Basically grid size.
 
     public static Element[] elements;
     public Element[] objects;
@@ -57,6 +57,7 @@ public class TreeSpawm : MonoBehaviour
 
                         // Instantiate and place element in world.
                         GameObject newElement = Instantiate(element.GetRandom());
+                        newElement.layer = 10;
                         newElement.transform.parent = parent.transform;
                         newElement.transform.position = position + offset;
                         newElement.transform.eulerAngles = rotation;

@@ -4,7 +4,6 @@ using UnityEngine;
 
 public class TerrainChunk
 {
-
     const float colliderGenerationDistanceThreshold = 5;
     public event System.Action<TerrainChunk, bool> onVisibilityChanged;
     public Vector2 coord;
@@ -31,7 +30,17 @@ public class TerrainChunk
     MeshSettings meshSettings;
     Transform viewer;
     List<GameObject> SurroundingObjects;
-    public TerrainChunk(Vector2 coord, HeightMapSettings heightMapSettings, MeshSettings meshSettings, LODInfo[] detailLevels, int colliderLODIndex, Transform parent, Transform viewer, Material material)
+
+    public TerrainChunk(
+        Vector2 coord,
+        HeightMapSettings heightMapSettings,
+        MeshSettings meshSettings,
+        LODInfo[] detailLevels,
+        int colliderLODIndex,
+        Transform parent,
+        Transform viewer,
+        Material material
+    )
     {
         this.coord = coord;
         this.detailLevels = detailLevels;
@@ -44,7 +53,6 @@ public class TerrainChunk
         Vector2 position = coord * meshSettings.meshWorldSize;
         bounds = new Bounds(position, Vector2.one * meshSettings.meshWorldSize);
 
-
         meshObject = new GameObject("Terrain Chunk");
         meshRenderer = meshObject.AddComponent<MeshRenderer>();
         meshFilter = meshObject.AddComponent<MeshFilter>();
@@ -52,13 +60,15 @@ public class TerrainChunk
         meshRenderer.material = material;
         meshObject.layer = 10;
 
-
         meshObject.transform.position = new Vector3(position.x, 0, position.y);
         meshObject.transform.parent = parent;
         SetVisible(false);
 
-        SurroundingObjects = TreeSpawm.GenerateObjects(position, meshSettings.numVertsPerLine, meshObject);
-
+        SurroundingObjects = TreeSpawm.GenerateObjects(
+            position,
+            meshSettings.numVertsPerLine,
+            meshObject
+        );
 
         lodMeshes = new LODMesh[detailLevels.Length];
         for (int i = 0; i < detailLevels.Length; i++)
@@ -75,107 +85,114 @@ public class TerrainChunk
 
         // SurroundingObjects[1].transform.position.y = heightMap.values
         // SurroundingObjects[1].transform.position = new Vector3(SurroundingObjects[1].transform.position.x, 0, position.y);
-
-
     }
 
     public void Load()
     {
-        ThreadedDataRequester.RequestData(() => HeightMapGenerator.GenerateHeightMap(meshSettings.numVertsPerLine, meshSettings.numVertsPerLine, heightMapSettings, sampleCentre), OnHeightMapReceived);
+        ThreadedDataRequester.RequestData(
+            () =>
+                HeightMapGenerator.GenerateHeightMap(
+                    meshSettings.numVertsPerLine,
+                    meshSettings.numVertsPerLine,
+                    heightMapSettings,
+                    sampleCentre
+                ),
+            OnHeightMapReceived
+        );
     }
-
-
 
     void OnHeightMapReceived(object heightMapObject)
     {
         this.heightMap = (HeightMap)heightMapObject;
         heightMapReceived = true;
 
-
         UpdateTerrainChunk();
     }
 
     Vector2 viewerPosition
     {
-        get
-        {
-            return new Vector2(viewer.position.x, viewer.position.z);
-        }
+        get { return new Vector2(viewer.position.x, viewer.position.z); }
     }
 
-    public List<GameObject> SurroundingObjects1 { get => SurroundingObjects; set => SurroundingObjects = value; }
+    public List<GameObject> SurroundingObjects1
+    {
+        get => SurroundingObjects;
+        set => SurroundingObjects = value;
+    }
 
     public void UpdateTerrainChunk()
     {
-        if (heightMapReceived)
+        if (!heightMapReceived)
+            return;
+
+        float viewerDstFromNearestEdge = Mathf.Sqrt(bounds.SqrDistance(viewerPosition));
+
+        bool wasVisible = IsVisible();
+        bool visible = viewerDstFromNearestEdge <= maxViewDst;
+
+        if (visible)
         {
-            float viewerDstFromNearestEdge = Mathf.Sqrt(bounds.SqrDistance(viewerPosition));
+            int lodIndex = 0;
 
-            bool wasVisible = IsVisible();
-            bool visible = viewerDstFromNearestEdge <= maxViewDst;
-
-            if (visible)
+            for (int i = 0; i < detailLevels.Length - 1; i++)
             {
-                int lodIndex = 0;
-
-                for (int i = 0; i < detailLevels.Length - 1; i++)
+                if (viewerDstFromNearestEdge > detailLevels[i].visibleDstThreshold)
                 {
-                    if (viewerDstFromNearestEdge > detailLevels[i].visibleDstThreshold)
-                    {
-                        lodIndex = i + 1;
-                    }
-                    else
-                    {
-                        break;
-                    }
+                    lodIndex = i + 1;
                 }
-
-                if (lodIndex != previousLODIndex)
+                else
                 {
-                    LODMesh lodMesh = lodMeshes[lodIndex];
-                    if (lodMesh.hasMesh)
-                    {
-                        previousLODIndex = lodIndex;
-                        meshFilter.mesh = lodMesh.mesh;
-
-                    }
-                    else if (!lodMesh.hasRequestedMesh)
-                    {
-                        lodMesh.RequestMesh(heightMap, meshSettings);
-
-                        for (int i = SurroundingObjects.Count - 1; i >= 0; i--)
-                        {
-
-
-                            int a = ((int)SurroundingObjects[i].transform.localPosition.x * 98 / 102 + 98) * 101 / 196;
-                            int b = ((int)SurroundingObjects[i].transform.localPosition.z * 98 / 102 + 98) * 101 / 196;
-                            SurroundingObjects[i].transform.localPosition = new Vector3((SurroundingObjects[i].transform.localPosition.x), ((heightMap.values[a, b]) - 0.5f), (SurroundingObjects[i].transform.localPosition.z * -1));
-                            
-                            EnemyMenager enemy = new EnemyMenager();
-                            enemy.HeightCheck((float)a, ((heightMap.values[a, b]) - 0.5f), (float)b);
-
-                            if (heightMap.values[a, b] < 10)
-                            {
-                                UnityEngine.Object.Destroy(SurroundingObjects[i]);
-                                SurroundingObjects.RemoveAt(i);
-                            }
-                        }
-
-
-                    }
+                    break;
                 }
-
-
             }
 
-            if (wasVisible != visible)
+            if (lodIndex != previousLODIndex)
             {
-
-                SetVisible(visible);
-                if (onVisibilityChanged != null)
+                LODMesh lodMesh = lodMeshes[lodIndex];
+                if (lodMesh.hasMesh)
                 {
-                    onVisibilityChanged(this, visible);
+                    previousLODIndex = lodIndex;
+                    meshFilter.mesh = lodMesh.mesh;
                 }
+                else if (!lodMesh.hasRequestedMesh)
+                {
+                    lodMesh.RequestMesh(heightMap, meshSettings);
+
+                    for (int i = SurroundingObjects.Count - 1; i >= 0; i--)
+                    {
+                        int a =
+                            ((int)SurroundingObjects[i].transform.localPosition.x * 98 / 102 + 98)
+                            * 101
+                            / 196;
+                        int b =
+                            ((int)SurroundingObjects[i].transform.localPosition.z * 98 / 102 + 98)
+                            * 101
+                            / 196;
+                        SurroundingObjects[i].transform.localPosition = new Vector3(
+                            (SurroundingObjects[i].transform.localPosition.x),
+                            ((heightMap.values[a, b]) - 0.5f),
+                            (SurroundingObjects[i].transform.localPosition.z * -1)
+                        );
+
+                        EnemyMenager enemy = new EnemyMenager();
+                        enemy.HeightCheck((float)a, ((heightMap.values[a, b]) - 0.5f), (float)b);
+
+                        if (heightMap.values[a, b] < 4)
+                        {
+                            UnityEngine.Object.Destroy(SurroundingObjects[i]);
+                            SurroundingObjects.RemoveAt(i);
+                        }
+                    }
+                }
+            }
+        }
+
+        if (wasVisible != visible)
+        {
+            SetVisible(visible);
+            if (onVisibilityChanged != null)
+            {
+                onVisibilityChanged(this, visible);
             }
         }
     }
@@ -194,7 +211,10 @@ public class TerrainChunk
                 }
             }
 
-            if (sqrDstFromViewerToEdge < colliderGenerationDistanceThreshold * colliderGenerationDistanceThreshold)
+            if (
+                sqrDstFromViewerToEdge
+                < colliderGenerationDistanceThreshold * colliderGenerationDistanceThreshold
+            )
             {
                 if (lodMeshes[colliderLODIndex].hasMesh)
                 {
@@ -214,12 +234,10 @@ public class TerrainChunk
     {
         return meshObject.activeSelf;
     }
-
 }
 
 class LODMesh
 {
-
     public Mesh mesh;
     public bool hasRequestedMesh;
     public bool hasMesh;
@@ -242,7 +260,9 @@ class LODMesh
     public void RequestMesh(HeightMap heightMap, MeshSettings meshSettings)
     {
         hasRequestedMesh = true;
-        ThreadedDataRequester.RequestData(() => MeshGenerator.GenerateTerrainMesh(heightMap.values, meshSettings, lod), OnMeshDataReceived);
+        ThreadedDataRequester.RequestData(
+            () => MeshGenerator.GenerateTerrainMesh(heightMap.values, meshSettings, lod),
+            OnMeshDataReceived
+        );
     }
-
 }
