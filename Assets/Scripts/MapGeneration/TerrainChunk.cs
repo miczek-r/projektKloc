@@ -122,79 +122,77 @@ public class TerrainChunk
 
     public void UpdateTerrainChunk()
     {
-        if (heightMapReceived)
+        if (!heightMapReceived)
+            return;
+
+        float viewerDstFromNearestEdge = Mathf.Sqrt(bounds.SqrDistance(viewerPosition));
+
+        bool wasVisible = IsVisible();
+        bool visible = viewerDstFromNearestEdge <= maxViewDst;
+
+        if (visible)
         {
-            float viewerDstFromNearestEdge = Mathf.Sqrt(bounds.SqrDistance(viewerPosition));
+            int lodIndex = 0;
 
-            bool wasVisible = IsVisible();
-            bool visible = viewerDstFromNearestEdge <= maxViewDst;
-
-            if (visible)
+            for (int i = 0; i < detailLevels.Length - 1; i++)
             {
-                int lodIndex = 0;
-
-                for (int i = 0; i < detailLevels.Length - 1; i++)
+                if (viewerDstFromNearestEdge > detailLevels[i].visibleDstThreshold)
                 {
-                    if (viewerDstFromNearestEdge > detailLevels[i].visibleDstThreshold)
-                    {
-                        lodIndex = i + 1;
-                    }
-                    else
-                    {
-                        break;
-                    }
+                    lodIndex = i + 1;
                 }
-
-                if (lodIndex != previousLODIndex)
+                else
                 {
-                    LODMesh lodMesh = lodMeshes[lodIndex];
-                    if (lodMesh.hasMesh)
-                    {
-                        previousLODIndex = lodIndex;
-                        meshFilter.mesh = lodMesh.mesh;
-                    }
-                    else if (!lodMesh.hasRequestedMesh)
-                    {
-                        lodMesh.RequestMesh(heightMap, meshSettings);
+                    break;
+                }
+            }
 
-                        for (int i = SurroundingObjects.Count - 1; i >= 0; i--)
+            if (lodIndex != previousLODIndex)
+            {
+                LODMesh lodMesh = lodMeshes[lodIndex];
+                if (lodMesh.hasMesh)
+                {
+                    previousLODIndex = lodIndex;
+                    meshFilter.mesh = lodMesh.mesh;
+                }
+                else if (!lodMesh.hasRequestedMesh)
+                {
+                    lodMesh.RequestMesh(heightMap, meshSettings);
+
+                    for (int i = SurroundingObjects.Count - 1; i >= 0; i--)
+                    {
+                        int a =
+                            ((int)SurroundingObjects[i].transform.localPosition.x * 98 / 102 + 98)
+                            * 101
+                            / 196;
+                        int b =
+                            ((int)SurroundingObjects[i].transform.localPosition.z * 98 / 102 + 98)
+                            * 101
+                            / 196;
+                        SurroundingObjects[i].transform.localPosition = new Vector3(
+                            (SurroundingObjects[i].transform.localPosition.x),
+                            ((heightMap.values[a, b]) - 0.5f),
+                            (SurroundingObjects[i].transform.localPosition.z * -1)
+                        );
+
+                        EnemyMenager enemy = new EnemyMenager();
+                        enemy.HeightCheck((float)a, ((heightMap.values[a, b]) - 0.5f), (float)b);
+
+                        if (heightMap.values[a, b] < 4)
                         {
-                            int a =
-                                (
-                                    (int)SurroundingObjects[i].transform.localPosition.x * 98 / 102
-                                    + 98
-                                )
-                                * 101
-                                / 196;
-                            int b =
-                                (
-                                    (int)SurroundingObjects[i].transform.localPosition.z * 98 / 102
-                                    + 98
-                                )
-                                * 101
-                                / 196;
-                            SurroundingObjects[i].transform.localPosition = new Vector3(
-                                (SurroundingObjects[i].transform.localPosition.x),
-                                ((heightMap.values[a, b]) - 0.75f),
-                                (SurroundingObjects[i].transform.localPosition.z * -1)
-                            );
-                            if (heightMap.values[a, b] < 4)
-                            {
-                                UnityEngine.Object.Destroy(SurroundingObjects[i]);
-                                SurroundingObjects.RemoveAt(i);
-                            }
+                            UnityEngine.Object.Destroy(SurroundingObjects[i]);
+                            SurroundingObjects.RemoveAt(i);
                         }
                     }
                 }
             }
+        }
 
-            if (wasVisible != visible)
+        if (wasVisible != visible)
+        {
+            SetVisible(visible);
+            if (onVisibilityChanged != null)
             {
-                SetVisible(visible);
-                if (onVisibilityChanged != null)
-                {
-                    onVisibilityChanged(this, visible);
-                }
+                onVisibilityChanged(this, visible);
             }
         }
     }
