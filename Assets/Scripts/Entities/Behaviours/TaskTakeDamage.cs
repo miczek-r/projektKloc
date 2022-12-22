@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using BehaviourTree;
@@ -14,8 +15,9 @@ public class TaskTakeDamage : Node
 
     public override NodeState Evaluate()
     {
-        int damageToBeDelt = (int)GetData("damageToBeDelt");
-        _transform.GetComponent<EntityStats>().TakeDamage(damageToBeDelt);
+        Tuple<GameObject, int> damageToBeDelt = (Tuple<GameObject, int>)GetData("damageToBeDelt");
+        _transform.GetComponent<EntityStats>().TakeDamage(damageToBeDelt.Item2);
+        parent.parent.SetData("lastDamageDealer", damageToBeDelt.Item1);
         _transform.GetComponent<Animator>().SetTrigger("isDamaged");
         state = NodeState.RUNNING;
         return state;

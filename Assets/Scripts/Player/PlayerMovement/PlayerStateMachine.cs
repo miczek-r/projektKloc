@@ -298,6 +298,7 @@ public class PlayerStateMachine : MonoBehaviour
             Quaternion.LookRotation(aimDir, Vector3.up)
         );
         arrow.GetComponent<Projectile>().damage = _playerStats.damage.GetValue();
+        arrow.GetComponent<Projectile>().spawner = gameObject;
         arrow.tag = "Projectile";
     }
 

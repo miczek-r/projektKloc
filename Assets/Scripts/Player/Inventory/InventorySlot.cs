@@ -8,6 +8,7 @@ public class InventorySlot : MonoBehaviour
     Item item;
 
     public Image icon;
+    public Sprite? defaultIcon = null;
 
     public void AddItem(Item newItem)
     {
@@ -20,8 +21,8 @@ public class InventorySlot : MonoBehaviour
     public void ClearSlot()
     {
         item = null;
-
-        icon.sprite = null;
-        icon.enabled = false;
+        if (defaultIcon == null)
+            icon.enabled = false;
+        icon.sprite = defaultIcon;
     }
 }

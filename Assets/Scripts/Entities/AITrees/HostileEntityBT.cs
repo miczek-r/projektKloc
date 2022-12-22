@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using BehaviourTree;
@@ -11,6 +12,8 @@ public class HostileEntityBT : BehaviourTree.Tree
     public static float attackRange = 2.0f;
     public bool isReturning = false;
     private Animator _animator;
+    private KillableEntityStats _stats;
+    private LootDrop _lootDropManager;
 
     void OnDrawGizmos()
     {
@@ -22,6 +25,12 @@ public class HostileEntityBT : BehaviourTree.Tree
         Gizmos.DrawSphere(transform.position, attackRange);
     }
 
+    public void Awake()
+    {
+        _stats = GetComponent<KillableEntityStats>();
+        _lootDropManager = GetComponent<LootDrop>();
+    }
+
     protected override Node SetupTree()
     {
         _animator = GetComponent<Animator>();
@@ -30,7 +39,11 @@ public class HostileEntityBT : BehaviourTree.Tree
             new List<Node>
             {
                 new Sequence(
-                    new List<Node> { new CheckForDeadStatus(transform), new TaskDie(transform) }
+                    new List<Node>
+                    {
+                        new CheckForDeadStatus(transform),
+                        new TaskDie(transform, _stats.ExpGiven, _lootDropManager)
+                    }
                 ),
                 new Sequence(
                     new List<Node>
@@ -50,7 +63,7 @@ public class HostileEntityBT : BehaviourTree.Tree
                     new List<Node>
                     {
                         new CheckForPlayerInAttackRange(transform, _animator),
-                        new TaskAttack(transform)
+                        new TaskAttack(transform, _stats.damage.GetValue())
                     }
                 ),
                 new Sequence(
@@ -68,7 +81,7 @@ public class HostileEntityBT : BehaviourTree.Tree
     }
 
     private Queue<int> _attackedBy = new();
-    private Queue<int> _damageTaken = new();
+    private Queue<Tuple<GameObject, int>> _damageTaken = new();
 
     private void OnTriggerEnter(Collider other)
     {
@@ -79,7 +92,10 @@ public class HostileEntityBT : BehaviourTree.Tree
         {
             Debug.Log("Damaged");
             _damageTaken.Enqueue(
-                other.transform.root.GetComponent<EntityStats>().damage.GetValue()
+                new Tuple<GameObject, int>(
+                    other.transform.root.gameObject,
+                    other.transform.root.GetComponent<EntityStats>().damage.GetValue()
+                )
             );
             _attackedBy.Enqueue(other.transform.root.GetInstanceID());
             StartCoroutine(nameof(DamagedCd));
@@ -89,7 +105,15 @@ public class HostileEntityBT : BehaviourTree.Tree
             && !_attackedBy.Contains(other.transform.root.GetInstanceID())
         )
         {
-            _damageTaken.Enqueue(other.transform.GetComponent<Projectile>().damage);
+            other.transform.root.GetComponent<Projectile>().enabled = false;
+            other.transform.root.GetComponent<Rigidbody>().isKinematic = true;
+            other.transform.root.SetParent(gameObject.transform.GetChild(0).GetChild(0));
+            _damageTaken.Enqueue(
+                new Tuple<GameObject, int>(
+                    other.transform.GetComponent<Projectile>().spawner,
+                    other.transform.GetComponent<Projectile>().damage
+                )
+            );
         }
     }
 

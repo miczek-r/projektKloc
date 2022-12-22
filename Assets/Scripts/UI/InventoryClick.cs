@@ -7,6 +7,7 @@ public class InventoryClick : MonoBehaviour, IPointerClickHandler
 {
     public void OnPointerClick(PointerEventData eventData)
     {
-        (Inventory.instance.items[int.Parse(gameObject.name) - 1] as Equipment).Use();
+        if (Inventory.instance.items.Count > int.Parse(gameObject.name) - 1)
+            (Inventory.instance.items[int.Parse(gameObject.name) - 1] as Equipment).Use();
     }
 }

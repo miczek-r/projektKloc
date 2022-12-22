@@ -70,11 +70,8 @@ public class PlayerQuickActions : MonoBehaviour
                 weapon.transform.localRotation = Quaternion.Euler(-20, 100, 0);
             }
         }
-        else
-        {
-            Debug.Log(itemToEquip.gameObject.name);
+        else if (itemToEquip.gameObject != null)
             armorParent.transform.Find(itemToEquip.gameObject.name).gameObject.SetActive(true);
-        }
     }
 
     public void UnEquipModel(Equipment oldItem)
