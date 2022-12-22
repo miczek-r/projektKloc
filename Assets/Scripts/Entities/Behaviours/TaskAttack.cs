@@ -11,10 +11,12 @@ public class TaskAttack : Node
 
     private float _attackCooldown = 1.0f;
     private float _waitingLeft = 0.0f;
+    private int _damage;
 
-    public TaskAttack(Transform transform)
+    public TaskAttack(Transform transform, int damage)
     {
         _animator = transform.GetComponent<Animator>();
+        _damage = damage;
     }
 
     public override NodeState Evaluate()
@@ -30,7 +32,7 @@ public class TaskAttack : Node
         if (_waitingLeft <= 0f)
         {
             _animator.SetTrigger("isAttacking");
-            _playerStats.TakeDamage(10);
+            _playerStats.TakeDamage(_damage);
             _waitingLeft = _attackCooldown;
 
             if (_playerStats.IsDead)

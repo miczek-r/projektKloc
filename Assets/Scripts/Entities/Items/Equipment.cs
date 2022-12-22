@@ -26,5 +26,5 @@ public enum EquipmentSlot
     Weapon,
     Arrows,
     Ring,
-    Necklease
+    Necklace
 }

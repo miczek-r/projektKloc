@@ -28,12 +28,12 @@ public class KillableEntityStats : EntityStats
         }
     }
 
-    public override void TakeDamage(int damage)
+    public override int TakeDamage(int damage)
     {
-        base.TakeDamage(damage);
+        var finalDamage = base.TakeDamage(damage);
         var damageTakenGameObject = Instantiate(damageTakenText);
         var obj = damageTakenGameObject.GetComponent<TMP_Text>();
-        obj.SetText(damage.ToString());
+        obj.SetText(finalDamage.ToString());
         damageTakenGameObject.transform.parent = statusBar.transform;
         damageTakenGameObject.transform.localPosition = Vector3.zero;
         damageTakenGameObject.transform.localRotation = Quaternion.identity;
@@ -44,5 +44,6 @@ public class KillableEntityStats : EntityStats
         {
             healthSliderUI.SetActive(false);
         }
+        return finalDamage;
     }
 }

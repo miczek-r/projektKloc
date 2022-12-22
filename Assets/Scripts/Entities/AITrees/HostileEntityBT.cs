@@ -63,7 +63,7 @@ public class HostileEntityBT : BehaviourTree.Tree
                     new List<Node>
                     {
                         new CheckForPlayerInAttackRange(transform, _animator),
-                        new TaskAttack(transform)
+                        new TaskAttack(transform, _stats.damage.GetValue())
                     }
                 ),
                 new Sequence(

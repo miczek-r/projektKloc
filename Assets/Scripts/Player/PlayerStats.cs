@@ -41,6 +41,8 @@ public class PlayerStats : EntityStats
         if (currentExp >= nextLvlExp)
         {
             Level++;
+            maxHealth += 10;
+            damage.baseValue += 1;
             currentExp = currentExp - nextLvlExp;
             nextLvlExp *= multiplie;
             expbar.setMaxExp(nextLvlExp);
@@ -72,7 +74,7 @@ public class PlayerStats : EntityStats
 
     void Regeneration()
     {
-        Regenerate(1);
+        Regenerate(maxHealth / 100 + 1);
         healthBarSlider.setHealth(currentHealth);
         stamina += 5;
         staminaBar.setStamina(stamina);
@@ -96,10 +98,11 @@ public class PlayerStats : EntityStats
         return true;
     }
 
-    public override void TakeDamage(int damage)
+    public override int TakeDamage(int damage)
     {
         base.TakeDamage(damage);
         healthBarSlider.setHealth(currentHealth);
+        return damage;
     }
 
     void OnEquipmentChanged(Equipment newItem, Equipment oldItem)
