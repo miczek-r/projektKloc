@@ -174,9 +174,6 @@ public class TerrainChunk
                             (SurroundingObjects[i].transform.localPosition.z * -1)
                         );
 
-                        EnemyMenager enemy = new EnemyMenager();
-                        enemy.HeightCheck((float)a, ((heightMap.values[a, b]) - 0.5f), (float)b);
-
                         if (heightMap.values[a, b] < 4)
                         {
                             UnityEngine.Object.Destroy(SurroundingObjects[i]);
